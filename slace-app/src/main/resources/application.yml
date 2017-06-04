@@ -2,31 +2,24 @@ spring:
   application:
     name: slace
   profiles:
-    active: local
-
+    active: production
+---
+spring:
+  profiles: production
+  data:
+    mongodb:
+      uri: mongodb://heroku_p1xd1sjm:j762tql5ksq8hf12b9ilmjhok4@ds163561.mlab.com:63561/heroku_p1xd1sjm
+storage:
+  location: ${user.home}/tmp
 ---
 spring:
   profiles: local
 spring:
   data:
     mongodb:
-      host: localhost
-      port: 27017
-      database: slace
+      uri: mongodb://localhost:27017/slace
 storage:
   location: E:\proj\slace\files\
 server:
     port: 8081
-
 ---
-
-spring:
-  profiles: production
-  data:
-    mongodb:
-      uri: ${MONGODB_URI}
-storage:
-  location: /tmp
-server:
-  port: ${port}
-
