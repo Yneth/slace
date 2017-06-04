@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: slace
+  profiles:
+    active: local
+
+---
+spring:
+  profiles: local
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: slace
+storage:
+  location: E:\proj\slace\files\
+server:
+    port: 8081
+
+---
+
+spring:
+  profiles: production
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+storage:
+  location: /tmp
+server:
+  port: ${port}
+
