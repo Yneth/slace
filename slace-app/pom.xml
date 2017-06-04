@@ -26,6 +26,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>ua.yware</groupId>
+            <artifactId>slace-ui</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
@@ -185,16 +191,4 @@
         </dependencies>
     </dependencyManagement>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
-                <configuration>
-                    <outputDirectory>../target/</outputDirectory>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

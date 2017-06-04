@@ -1,6 +1,9 @@
 /files
 /data
 
+/slace-ui/src/node
+/slace-ui/dist
+
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
