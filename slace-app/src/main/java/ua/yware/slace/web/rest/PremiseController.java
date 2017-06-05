@@ -35,7 +35,7 @@ public class PremiseController {
 
     private final PremiseRepository premiseRepository;
 
-    @GetMapping
+    @GetMapping("/categories")
     public Iterable<PremiseCategoryDto> getPremiseCategories() {
         return Arrays.asList(new PremiseCategoryDto(10L, PremiseCategory.CONCERT),
                 new PremiseCategoryDto(24L, PremiseCategory.PHOTO_SESSION),
