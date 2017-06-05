@@ -17,14 +17,20 @@
 package ua.yware.slace.web.rest;
 
 import java.util.Arrays;
+import java.util.stream.StreamSupport;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import ua.yware.slace.dao.PremiseRepository;
 import ua.yware.slace.model.Premise;
 import ua.yware.slace.model.enums.PremiseCategory;
 import ua.yware.slace.service.dto.PremiseCategoryDto;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,6 +53,12 @@ public class PremiseController {
     @GetMapping("/popular")
     public Iterable<Premise> getPopularPremises() {
         return premiseRepository.findAll();
+    }
+
+    @PostMapping
+    public ResponseEntity createPremise(@RequestBody Premise premise) {
+        premiseRepository.save(premise);
+        return ResponseEntity.ok().build();
     }
 
 }
