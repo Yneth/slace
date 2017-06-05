@@ -16,33 +16,17 @@
 
 package ua.yware.slace.model;
 
-import java.math.BigInteger;
-import java.util.List;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-public class User {
+public class Authority {
 
-    @Id
-    private BigInteger id;
+    private Long id;
 
-    private String login;
-
-    private String password;
-
-    private String email;
-
-    private String phone;
-
-    private List<String> roles;
+    private String roleName;
 
 }

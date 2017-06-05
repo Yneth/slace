@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-package ua.yware.slace.config;
+package ua.yware.slace.config.jwt;
 
-public class JwtFilter {
+public class InvalidTokenException extends Exception {
+
+    public InvalidTokenException(String message, Exception e) {
+        super(message, e);
+    }
+
 }

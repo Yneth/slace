@@ -16,25 +16,39 @@
 
 package ua.yware.slace.service.user;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import lombok.RequiredArgsConstructor;
 import ua.yware.slace.model.User;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+@RequiredArgsConstructor
 @Component("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Override
-    public UserDetails loadUserByUsername(String login)
-            throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String login) {
         User user = userService.findByLogin(login);
         if (user == null) {
-            return null;
+            throw new UsernameNotFoundException(String.format("No user with such login '%s'", login));
         }
-        return null;
+        return new org.springframework.security.core.userdetails.User(
+                user.getLogin(), user.getPassword(), getAuthorities(user));
     }
+
+    private List<GrantedAuthority> getAuthorities(User user) {
+        return user.getRoles().stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+
 }

@@ -2,15 +2,19 @@ spring:
   application:
     name: slace
   profiles:
-    active: production
+    active: local
+jwt:
+  expiration: 10080000
+  rememberMeExpiration: 44640000
 ---
 spring:
   profiles: production
   data:
     mongodb:
-      uri: mongodb://heroku_p1xd1sjm:j762tql5ksq8hf12b9ilmjhok4@ds163561.mlab.com:63561/heroku_p1xd1sjm
+      uri: ${MONGODB_URI}
+jwt.secret: ${TOKEN_SECRET}
 storage:
-  location: ${user.home}/tmp
+  location: /tmp
 ---
 spring:
   profiles: local
@@ -18,6 +22,9 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/slace
+jwt:
+  secret: testesttes
+
 storage:
   location: E:\proj\slace\files\
 server:

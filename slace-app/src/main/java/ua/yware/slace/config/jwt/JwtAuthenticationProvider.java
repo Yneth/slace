@@ -14,35 +14,23 @@
  * limitations under the License.
  */
 
-package ua.yware.slace.model;
+package ua.yware.slace.config.jwt;
 
-import java.math.BigInteger;
-import java.util.List;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+public class JwtAuthenticationProvider implements AuthenticationProvider {
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+    @Override
+    public Authentication authenticate(Authentication authentication)
+            throws AuthenticationException {
+        return null;
+    }
 
-@Document
-@Getter
-@Setter
-@EqualsAndHashCode(of = "id")
-public class User {
-
-    @Id
-    private BigInteger id;
-
-    private String login;
-
-    private String password;
-
-    private String email;
-
-    private String phone;
-
-    private List<String> roles;
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return true;
+    }
 
 }

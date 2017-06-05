@@ -14,35 +14,19 @@
  * limitations under the License.
  */
 
-package ua.yware.slace.model;
+package ua.yware.slace.service.dto;
 
-import java.math.BigInteger;
-import java.util.List;
-
-import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
-public class User {
+@NoArgsConstructor
+@AllArgsConstructor
+public class JwtTokenDto {
 
-    @Id
-    private BigInteger id;
-
-    private String login;
-
-    private String password;
-
-    private String email;
-
-    private String phone;
-
-    private List<String> roles;
+    private String token;
 
 }
