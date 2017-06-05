@@ -16,14 +16,33 @@
 
 package ua.yware.slace.web.websocket;
 
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;
+import java.util.List;
 
-@Controller
+import lombok.RequiredArgsConstructor;
+import ua.yware.slace.facade.ChatFacade;
+import ua.yware.slace.model.ChatMessage;
+
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
 public class ChatController {
 
-//    @SendTo("/chat")
-//    public ChatDto sendMessage() {
-//
-//    }
+    private final ChatFacade chatFacade;
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/chat/{userId}")
+    public List<ChatMessage> getChatHistory(@PathVariable("userId") Long userId) {
+        return chatFacade.loadHistory(userId);
+    }
+
+    @MessageMapping("/chat.private.${userId}")
+    public void sendPrivateMessage(Long userId) {
+
+    }
+
 }
