@@ -18,6 +18,8 @@ package ua.yware.slace.model;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
+import java.util.Map;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -51,5 +53,17 @@ public class Premise {
     private String imageUri;
 
     private BigDecimal priceRate;
+
+    private List<String> comments;
+
+    private List<String> equipment;
+
+    private Map<String, String> schedule;
+
+    private String description;
+
+    private String about;
+
+    private User owner;
 
 }
