@@ -16,10 +16,9 @@
 
 package ua.yware.slace.web.rest;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import ua.yware.slace.dao.PremiseRepository;
 import ua.yware.slace.model.Premise;
 import ua.yware.slace.model.enums.PremiseCategory;
@@ -31,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/premises")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PremiseController {
 
     private final PremiseRepository premiseRepository;
@@ -47,27 +46,7 @@ public class PremiseController {
 
     @GetMapping("/popular")
     public Iterable<Premise> getPopularPremises() {
-        return Arrays.asList(
-                createPremise("1", "1", "Red Hook Warehouse", 200, new BigDecimal(10),
-                        "Саксаганского, 24", 190, PremiseCategory.CONCERT),
-                createPremise("2", "2", "Green Hook Warehouse", 200, new BigDecimal(10),
-                        "Саксаганского, 24", 320, PremiseCategory.FESTIVITY),
-                createPremise("3", "3", "Blue Hook Warehouse", 200, new BigDecimal(10),
-                        "Саксаганского, 24", 500, PremiseCategory.PHOTO_SESSION));
-
+        return premiseRepository.findAll();
     }
 
-    private Premise createPremise(String id, String imageId, String name, Integer space,
-                                  BigDecimal priceRate, String address, Integer area, PremiseCategory category) {
-        Premise premise = new Premise();
-        premise.setImageUri("/" + imageId);
-        premise.setName(name);
-        premise.setAddress(address);
-        premise.setSpace(space);
-        premise.setArea(area);
-        premise.setPriceRate(priceRate);
-        premise.setId(id);
-        premise.setCategory(category);
-        return premise;
-    }
 }
