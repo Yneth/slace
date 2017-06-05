@@ -34,14 +34,17 @@ class PremisePopulator implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (premiseRepository.findById(new BigInteger("1")) == null) {
+            System.out.println("create 1");
             premiseRepository.save(createPremise("1", "1", "Red Hook Warehouse", 200, new BigDecimal(10),
                     "Саксаганского, 24", 190, PremiseCategory.CONCERT));
         }
         if (premiseRepository.findById(new BigInteger("2")) == null) {
+            System.out.println("create 2");
             premiseRepository.save(createPremise("2", "2", "Green Hook Warehouse", 200, new BigDecimal(10),
                     "Саксаганского, 24", 320, PremiseCategory.FESTIVITY));
         }
         if (premiseRepository.findById(new BigInteger("3")) == null) {
+            System.out.println("create 3");
             premiseRepository.save(createPremise("3", "3", "Blue Hook Warehouse", 200, new BigDecimal(10),
                     "Саксаганского, 24", 500, PremiseCategory.PHOTO_SESSION));
         }
