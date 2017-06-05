@@ -16,19 +16,21 @@
 
 package ua.yware.slace.model;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Image {
 
-    private String name;
+    private Long id;
 
-    public Image(String name) {
-        this.name = name;
-    }
+    private String filename;
 
 }

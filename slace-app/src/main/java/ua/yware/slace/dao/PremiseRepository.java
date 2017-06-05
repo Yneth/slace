@@ -16,10 +16,12 @@
 
 package ua.yware.slace.dao;
 
+import java.math.BigInteger;
+
 import ua.yware.slace.model.Premise;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface PremiseRepository extends CrudRepository<Premise, String> {
+public interface PremiseRepository extends CrudRepository<Premise, BigInteger> {
 
 }

@@ -16,11 +16,13 @@
 
 package ua.yware.slace.dao;
 
+import java.math.BigInteger;
+
 import ua.yware.slace.model.User;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface UserRepository extends CrudRepository<User, String> {
+public interface UserRepository extends CrudRepository<User, BigInteger> {
 
     User findByLogin(String login);
 

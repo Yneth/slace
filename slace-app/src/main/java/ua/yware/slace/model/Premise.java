@@ -17,6 +17,7 @@
 package ua.yware.slace.model;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,11 +30,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 @Getter
 @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "id")
 public class Premise {
 
     @Id
-    private String id;
+    private BigInteger id;
 
     private String name;
 
