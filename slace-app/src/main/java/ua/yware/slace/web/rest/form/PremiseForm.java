@@ -14,50 +14,41 @@
  * limitations under the License.
  */
 
-package ua.yware.slace.model;
+package ua.yware.slace.web.rest.form;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import ua.yware.slace.model.Category;
+import ua.yware.slace.model.enums.PremiseCategory;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
-public class User {
+public class PremiseForm {
 
-    @Id
-    private BigInteger id;
+    private String name;
 
-    private String login;
+    private Integer space;
 
-    private String password;
+    private Integer area;
 
-    private String email;
+    private String address;
 
-    private String phone;
+    private List<Category> categories;
 
-    private String firstName;
+    private PremiseCategory category;
 
-    private String lastName;
+    private BigDecimal priceRate;
 
-    private String city;
+    private List<String> equipment;
 
-    private boolean receiveSms;
+    private Map<String, String> schedule;
 
-    private boolean receiveEmail;
+    private String description;
 
     private String about;
-
-    private String imageUri;
-
-    private List<UserRole> roles = new ArrayList<>();
 
 }

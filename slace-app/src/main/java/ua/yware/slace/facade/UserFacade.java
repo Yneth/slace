@@ -14,19 +14,7 @@
  * limitations under the License.
  */
 
-package ua.yware.slace.dao;
+package ua.yware.slace.facade;
 
-import java.math.BigInteger;
-import java.util.List;
-
-import ua.yware.slace.model.Premise;
-
-import org.springframework.data.repository.CrudRepository;
-
-public interface PremiseRepository extends CrudRepository<Premise, BigInteger> {
-
-    List<Premise> findAllByReservationsOwnerId(BigInteger id);
-
-    List<Premise> findAllByOwnerId(BigInteger id);
-
+public interface UserFacade {
 }

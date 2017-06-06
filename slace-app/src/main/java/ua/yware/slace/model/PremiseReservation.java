@@ -16,17 +16,37 @@
 
 package ua.yware.slace.model;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-public class Authority {
+public class PremiseReservation {
 
-    private Long id;
+    @Id
+    private BigInteger id;
 
-    private String roleName;
+    @DBRef
+    private Premise premise;
+
+    @DBRef
+    private User user;
+
+    private LocalDateTime from;
+
+    private LocalDateTime to;
+
+    private BigDecimal priceRate;
 
 }

@@ -17,8 +17,7 @@
 package ua.yware.slace.model;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -27,37 +26,23 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
 @Getter
 @Setter
+@Document
 @EqualsAndHashCode(of = "id")
-public class User {
+public class Comment {
 
     @Id
     private BigInteger id;
 
-    private String login;
+    private int estimate;
 
-    private String password;
+    private String message;
 
-    private String email;
+    private Premise premise;
 
-    private String phone;
+    private User owner;
 
-    private String firstName;
-
-    private String lastName;
-
-    private String city;
-
-    private boolean receiveSms;
-
-    private boolean receiveEmail;
-
-    private String about;
-
-    private String imageUri;
-
-    private List<UserRole> roles = new ArrayList<>();
+    private LocalDateTime creationDate;
 
 }

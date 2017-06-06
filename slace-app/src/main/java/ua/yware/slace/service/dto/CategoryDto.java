@@ -14,50 +14,27 @@
  * limitations under the License.
  */
 
-package ua.yware.slace.model;
+package ua.yware.slace.service.dto;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import ua.yware.slace.model.Category;
+import ua.yware.slace.model.Premise;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
-public class User {
+public class CategoryDto {
 
-    @Id
-    private BigInteger id;
+    private String name;
 
-    private String login;
+    private Integer count;
 
-    private String password;
-
-    private String email;
-
-    private String phone;
-
-    private String firstName;
-
-    private String lastName;
-
-    private String city;
-
-    private boolean receiveSms;
-
-    private boolean receiveEmail;
-
-    private String about;
-
-    private String imageUri;
-
-    private List<UserRole> roles = new ArrayList<>();
+    public CategoryDto(Category category) {
+        this.name = category.getName();
+        List<Premise> premises = category.getPremises();
+        this.count = premises != null ? premises.size() : 0;
+    }
 
 }

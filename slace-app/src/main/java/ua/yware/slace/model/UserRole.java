@@ -17,47 +17,23 @@
 package ua.yware.slace.model;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-public class User {
+@Document
+public class UserRole {
 
-    @Id
+    @Transient
     private BigInteger id;
 
-    private String login;
-
-    private String password;
-
-    private String email;
-
-    private String phone;
-
-    private String firstName;
-
-    private String lastName;
-
-    private String city;
-
-    private boolean receiveSms;
-
-    private boolean receiveEmail;
-
-    private String about;
-
-    private String imageUri;
-
-    private List<UserRole> roles = new ArrayList<>();
+    private String roleName;
 
 }

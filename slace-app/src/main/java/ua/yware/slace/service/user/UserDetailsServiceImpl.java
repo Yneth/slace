@@ -47,7 +47,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private List<GrantedAuthority> getAuthorities(User user) {
         return user.getRoles().stream()
-                .map(SimpleGrantedAuthority::new)
+                .map(auth -> new SimpleGrantedAuthority(auth.getRoleName()))
                 .collect(Collectors.toList());
     }
 

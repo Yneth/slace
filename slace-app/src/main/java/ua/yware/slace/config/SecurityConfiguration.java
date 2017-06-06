@@ -16,11 +16,11 @@
 
 package ua.yware.slace.config;
 
+import lombok.RequiredArgsConstructor;
 import ua.yware.slace.config.jwt.JwtAuthenticationFilter;
 import ua.yware.slace.config.jwt.JwtTokenService;
 import ua.yware.slace.config.jwt.TokenService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -35,10 +35,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private JwtAuthenticationFilter authenticationFilter;
+    private final JwtAuthenticationFilter authenticationFilter;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

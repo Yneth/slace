@@ -24,9 +24,9 @@ import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import ua.yware.slace.model.enums.PremiseCategory;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -46,15 +46,16 @@ public class Premise {
 
     private String address;
 
-    private boolean reserved;
-
-    private PremiseCategory category;
+    @DBRef(lazy = true)
+    private List<Category> categories;
 
     private String imageUri;
 
     private BigDecimal priceRate;
 
-    private List<String> comments;
+    private int totalEstimation;
+
+    private List<Comment> comments;
 
     private List<String> equipment;
 
@@ -64,6 +65,10 @@ public class Premise {
 
     private String about;
 
+    @DBRef
     private User owner;
+
+    @DBRef(lazy = true)
+    private List<PremiseReservation> reservations;
 
 }

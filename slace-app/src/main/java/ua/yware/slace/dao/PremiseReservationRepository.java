@@ -17,16 +17,17 @@
 package ua.yware.slace.dao;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import ua.yware.slace.model.Premise;
+import ua.yware.slace.model.PremiseReservation;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface PremiseRepository extends CrudRepository<Premise, BigInteger> {
+public interface PremiseReservationRepository
+        extends CrudRepository<PremiseReservation, BigInteger> {
 
-    List<Premise> findAllByReservationsOwnerId(BigInteger id);
-
-    List<Premise> findAllByOwnerId(BigInteger id);
+    List<PremiseReservation> findAllByPremiseIdAndFromAfterAndToBefore(BigInteger id, LocalDateTime from,
+                                                                       LocalDateTime to);
 
 }

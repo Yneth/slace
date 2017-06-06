@@ -20,14 +20,19 @@ import com.github.mongobee.Mongobee;
 
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
+@Configuration
 public class MongobeeConfiguration {
 
     @Bean
-    public Mongobee mongobee(MongoProperties properties) {
-        Mongobee runner = new Mongobee(properties.getMongoClientDatabase());
+    public Mongobee mongobee(MongoProperties properties, MongoTemplate mongoTemplate) {
+        Mongobee runner = new Mongobee(properties.getUri());
 
         runner.setChangeLogsScanPackage("ua.yware.slace.config.changeset");
+
+        runner.setMongoTemplate(mongoTemplate);
 
         return runner;
     }
