@@ -16,12 +16,18 @@
 
 package ua.yware.slace.web.rest;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 import ua.yware.slace.config.jwt.TokenService;
+import ua.yware.slace.dao.UserRepository;
+import ua.yware.slace.model.User;
+import ua.yware.slace.model.UserRole;
 import ua.yware.slace.service.dto.JwtTokenDto;
 import ua.yware.slace.service.dto.LoginDto;
 import ua.yware.slace.web.rest.form.ChangePasswordForm;
@@ -34,6 +40,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,8 +52,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
+
+    @PostMapping
+    public ResponseEntity register(CreateUserForm createUserForm) {
+        User user = new User();
+        user.setAbout(createUserForm.getAbout());
+        user.setCity(createUserForm.getCity());
+        user.setLastName(createUserForm.getLastName());
+        user.setFirstName(createUserForm.getFirstName());
+        user.setLogin(createUserForm.getLogin());
+        user.setPhone(createUserForm.getPhone());
+        user.setEmail(createUserForm.getEmail());
+        user.setPassword(passwordEncoder.encode(createUserForm.getPassword()));
+        List<UserRole> userRoles = new ArrayList<>();
+        userRoles.add(new UserRole("admin"));
+        user.setRoles(userRoles);
+
+        userRepository.save(user);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 
     @PostMapping("/authenticate")
     public ResponseEntity authenticate(@Valid @RequestBody LoginDto loginDTO, HttpServletResponse response) {

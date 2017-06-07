@@ -27,7 +27,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "roleName")
 @Document
 public class UserRole {
 
@@ -36,4 +36,7 @@ public class UserRole {
 
     private String roleName;
 
+    public UserRole(String roleName) {
+        this.roleName = roleName;
+    }
 }

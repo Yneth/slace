@@ -9,15 +9,20 @@ jwt:
 ---
 spring:
   profiles: production
+
+spring:
   data:
     mongodb:
       uri: ${MONGODB_URI}
+
 jwt.secret: ${TOKEN_SECRET}
+
 storage:
   location: /tmp
 ---
 spring:
   profiles: local
+
 spring:
   data:
     mongodb:
@@ -27,6 +32,7 @@ jwt:
 
 storage:
   location: E:\proj\slace\files\
+
 server:
     port: 8081
 ---
