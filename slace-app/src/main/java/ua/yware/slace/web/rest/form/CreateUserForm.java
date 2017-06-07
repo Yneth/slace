@@ -1,4 +1,4 @@
-package ua.yware.slace.web.rest;
+package ua.yware.slace.web.rest.form;
 
 import lombok.Getter;
 import lombok.Setter;

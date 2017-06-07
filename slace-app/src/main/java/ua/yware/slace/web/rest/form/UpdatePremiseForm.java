@@ -17,12 +17,13 @@
 package ua.yware.slace.web.rest.form;
 
 import java.math.BigInteger;
+import java.util.UUID;
 
 import lombok.Getter;
 
 @Getter
 public class UpdatePremiseForm extends PremiseForm {
 
-    private BigInteger id;
+    private UUID id;
 
 }

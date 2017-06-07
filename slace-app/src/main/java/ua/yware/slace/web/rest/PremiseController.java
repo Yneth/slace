@@ -19,6 +19,7 @@ package ua.yware.slace.web.rest;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -30,6 +31,7 @@ import ua.yware.slace.model.Comment;
 import ua.yware.slace.model.Premise;
 import ua.yware.slace.model.PremiseReservation;
 import ua.yware.slace.model.User;
+import ua.yware.slace.service.PremiseService;
 import ua.yware.slace.service.dto.CategoryDto;
 import ua.yware.slace.service.user.CurrentUserService;
 import ua.yware.slace.web.rest.form.BookPremiseForm;
@@ -55,6 +57,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PremiseController {
 
+    private final PremiseService premiseService;
     private final PremiseRepository premiseRepository;
     private final CurrentUserService currentUserService;
     private final PremiseReservationRepository premiseReservationRepository;
@@ -73,18 +76,18 @@ public class PremiseController {
     }
 
     @GetMapping("/{id}")
-    public Premise getPremiseById(@PathVariable("id") BigInteger id) {
+    public Premise getPremiseById(@PathVariable("id") UUID id) {
         return premiseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("No such premise"));
     }
 
     @GetMapping("/user")
     public Iterable<Premise> getUserPremises() {
-        return premiseRepository.findAllByReservationsOwnerId(currentUserService.getCurrentUser().getId());
+        return premiseRepository.findAllByOwnerId(currentUserService.getCurrentUser().getId());
     }
 
     @GetMapping("/{id}/reservations/nearest")
-    public Iterable<PremiseReservation> getNearestReservations(@PathVariable("id") BigInteger id) {
+    public Iterable<PremiseReservation> getNearestReservations(@PathVariable("id") UUID id) {
         LocalDateTime now = LocalDateTime.now();
         return premiseReservationRepository.findAllByPremiseIdAndFromAfterAndToBefore(
                 id, now.minusMonths(1), now.plusMonths(1));
@@ -107,7 +110,6 @@ public class PremiseController {
         }
 
         PremiseReservation premiseReservation = new PremiseReservation();
-        premiseReservation.setId(bookPremiseForm.getPremiseId());
         premiseReservation.setFrom(bookPremiseForm.getFrom());
         premiseReservation.setTo(bookPremiseForm.getTo());
         premiseReservation.setUser(currentUser);
@@ -121,7 +123,7 @@ public class PremiseController {
 
     @PreAuthorize("isAuthenticated()")
     @Transactional
-    @DeleteMapping("/{premiseId}/reservations/{id}")
+    @PostMapping("/{premiseId}/reservations/{id}/cancel")
     public ResponseEntity cancelReservation(@PathVariable("id") BigInteger id) {
         premiseReservationRepository.deleteById(id);
         return new ResponseEntity(HttpStatus.OK);
@@ -130,7 +132,7 @@ public class PremiseController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/reserved")
     public Iterable<Premise> listReserved() {
-        return premiseRepository.findAllByReservationsOwnerId(currentUserService.getCurrentUser().getId());
+        return premiseRepository.findAllByReservationsUserId(currentUserService.getCurrentUser().getId());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -140,7 +142,7 @@ public class PremiseController {
 
         mapToEntity(createPremiseForm, premise);
 
-        premiseRepository.save(premise);
+        premiseService.save(premise);
 
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -152,14 +154,13 @@ public class PremiseController {
                 .orElseThrow(() -> new RuntimeException("not found"));
         mapToEntity(premiseForm, premise);
 
-        premiseRepository.save(premise);
 
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable("id") BigInteger id) {
+    public ResponseEntity delete(@PathVariable("id") UUID id) {
         premiseRepository.deleteById(id);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -183,7 +184,7 @@ public class PremiseController {
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{premiseId}/comment/{id}")
-    public ResponseEntity removeComment(@PathVariable("premiseId") BigInteger premiseId,
+    public ResponseEntity removeComment(@PathVariable("premiseId") UUID premiseId,
                                         @PathVariable("id") BigInteger commentId) {
         Premise premise = premiseRepository.findById(premiseId)
                 .orElseThrow(() -> new RuntimeException("no such premise"));

@@ -17,6 +17,7 @@
 package ua.yware.slace.web.rest.form;
 
 import java.math.BigInteger;
+import java.util.UUID;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +25,7 @@ import lombok.Setter;
 @Getter
 public class CommentForm {
 
-    private BigInteger premiseId;
+    private UUID premiseId;
 
     private String message;
 

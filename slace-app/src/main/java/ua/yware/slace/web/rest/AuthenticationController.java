@@ -16,23 +16,6 @@
 
 package ua.yware.slace.web.rest;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
-import lombok.RequiredArgsConstructor;
-import ua.yware.slace.config.jwt.TokenService;
-import ua.yware.slace.dao.UserRepository;
-import ua.yware.slace.model.User;
-import ua.yware.slace.model.UserRole;
-import ua.yware.slace.service.dto.JwtTokenDto;
-import ua.yware.slace.service.dto.LoginDto;
-import ua.yware.slace.web.rest.form.ChangePasswordForm;
-import ua.yware.slace.web.rest.form.UpdateUserForm;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -47,6 +30,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import lombok.RequiredArgsConstructor;
+import ua.yware.slace.config.jwt.TokenService;
+import ua.yware.slace.dao.UserRepository;
+import ua.yware.slace.model.User;
+import ua.yware.slace.model.UserRole;
+import ua.yware.slace.service.dto.JwtTokenDto;
+import ua.yware.slace.service.dto.LoginDto;
+import ua.yware.slace.service.mail.MailService;
+import ua.yware.slace.web.rest.form.ChangePasswordForm;
+import ua.yware.slace.web.rest.form.CreateUserForm;
+import ua.yware.slace.web.rest.form.UpdateUserForm;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -56,6 +58,7 @@ public class AuthenticationController {
     private final UserRepository userRepository;
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
+    private final MailService mailService;
 
     @PostMapping
     public ResponseEntity register(CreateUserForm createUserForm) {

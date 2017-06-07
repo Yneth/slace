@@ -18,6 +18,7 @@ package ua.yware.slace.web.rest.form;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +26,7 @@ import lombok.Setter;
 @Getter
 public class BookPremiseForm {
 
-    private BigInteger premiseId;
+    private UUID premiseId;
 
     private LocalDateTime from;
 

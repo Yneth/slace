@@ -27,6 +27,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/slace
+
 jwt:
   secret: testesttes
 
@@ -34,5 +35,5 @@ storage:
   location: E:\proj\slace\files\
 
 server:
-    port: 8081
+  port: 8081
 ---

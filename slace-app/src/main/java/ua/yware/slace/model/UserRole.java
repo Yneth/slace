@@ -16,19 +16,21 @@
 
 package ua.yware.slace.model;
 
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.math.BigInteger;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.mapping.Document;
-
+@Document
 @Getter
 @Setter
+@NoArgsConstructor
 @EqualsAndHashCode(of = "roleName")
-@Document
 public class UserRole {
 
     @Transient
@@ -39,4 +41,5 @@ public class UserRole {
     public UserRole(String roleName) {
         this.roleName = roleName;
     }
+
 }

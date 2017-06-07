@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,6 +30,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+@org.springframework.data.elasticsearch.annotations.Document(indexName = "slace", type = "premises")
 @Document
 @Getter
 @Setter
@@ -36,7 +38,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Premise {
 
     @Id
-    private BigInteger id;
+    private UUID id;
 
     private String name;
 

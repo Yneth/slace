@@ -19,7 +19,9 @@ package ua.yware.slace.dao;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
+import ua.yware.slace.model.Premise;
 import ua.yware.slace.model.PremiseReservation;
 
 import org.springframework.data.repository.CrudRepository;
@@ -27,7 +29,7 @@ import org.springframework.data.repository.CrudRepository;
 public interface PremiseReservationRepository
         extends CrudRepository<PremiseReservation, BigInteger> {
 
-    List<PremiseReservation> findAllByPremiseIdAndFromAfterAndToBefore(BigInteger id, LocalDateTime from,
+    List<PremiseReservation> findAllByPremiseIdAndFromAfterAndToBefore(UUID id, LocalDateTime from,
                                                                        LocalDateTime to);
 
     List<PremiseReservation> findFirstByUserIdAndPremiseOwnerId(BigInteger userId, BigInteger ownerId);
