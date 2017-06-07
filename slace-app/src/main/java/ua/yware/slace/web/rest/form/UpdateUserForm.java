@@ -16,19 +16,5 @@
 
 package ua.yware.slace.web.rest.form;
 
-import java.math.BigInteger;
-import java.time.LocalDateTime;
-
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-public class BookPremiseForm {
-
-    private BigInteger premiseId;
-
-    private LocalDateTime from;
-
-    private LocalDateTime to;
-
+public class UpdateUserForm {
 }

@@ -16,19 +16,13 @@
 
 package ua.yware.slace.web.rest.form;
 
-import java.math.BigInteger;
-import java.time.LocalDateTime;
-
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-public class BookPremiseForm {
+public class ChatMessageForm {
 
-    private BigInteger premiseId;
+    private String receiverId;
 
-    private LocalDateTime from;
-
-    private LocalDateTime to;
+    private String message;
 
 }

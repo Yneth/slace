@@ -24,6 +24,8 @@ import lombok.RequiredArgsConstructor;
 import ua.yware.slace.config.jwt.TokenService;
 import ua.yware.slace.service.dto.JwtTokenDto;
 import ua.yware.slace.service.dto.LoginDto;
+import ua.yware.slace.web.rest.form.ChangePasswordForm;
+import ua.yware.slace.web.rest.form.UpdateUserForm;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,7 +48,7 @@ public class AuthenticationController {
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
 
-    @PostMapping(value = "/authenticate")
+    @PostMapping("/authenticate")
     public ResponseEntity authenticate(@Valid @RequestBody LoginDto loginDTO, HttpServletResponse response) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDTO.getLogin(), loginDTO.getPassword());
@@ -65,4 +68,17 @@ public class AuthenticationController {
             ), HttpStatus.UNAUTHORIZED);
         }
     }
+
+    @PutMapping("/update")
+    public ResponseEntity updateAccount(@RequestBody UpdateUserForm updateUserForm) {
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping("/password")
+    public ResponseEntity changePassword(@RequestBody ChangePasswordForm changePasswordForm) {
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
 }

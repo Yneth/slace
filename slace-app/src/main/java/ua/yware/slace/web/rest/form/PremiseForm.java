@@ -26,7 +26,6 @@ import ua.yware.slace.model.Category;
 import ua.yware.slace.model.enums.PremiseCategory;
 
 @Getter
-@Setter
 public class PremiseForm {
 
     private String name;

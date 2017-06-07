@@ -30,4 +30,6 @@ public interface PremiseReservationRepository
     List<PremiseReservation> findAllByPremiseIdAndFromAfterAndToBefore(BigInteger id, LocalDateTime from,
                                                                        LocalDateTime to);
 
+    List<PremiseReservation> findFirstByUserIdAndPremiseOwnerId(BigInteger userId, BigInteger ownerId);
+
 }

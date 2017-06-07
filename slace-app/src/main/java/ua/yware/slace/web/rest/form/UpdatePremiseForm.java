@@ -19,10 +19,8 @@ package ua.yware.slace.web.rest.form;
 import java.math.BigInteger;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 public class UpdatePremiseForm extends PremiseForm {
 
     private BigInteger id;

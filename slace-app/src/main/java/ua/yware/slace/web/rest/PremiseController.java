@@ -46,6 +46,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -92,7 +93,7 @@ public class PremiseController {
     @PreAuthorize("isAuthenticated()")
     @Transactional
     @PostMapping("{id}/reservations")
-    public ResponseEntity bookPremise(BookPremiseForm bookPremiseForm) {
+    public ResponseEntity bookPremise(@RequestBody BookPremiseForm bookPremiseForm) {
         // TODO if owner
         // TODO else other users
         User currentUser = currentUserService.getCurrentUser();
@@ -134,7 +135,7 @@ public class PremiseController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping
-    public ResponseEntity create(PremiseForm createPremiseForm) {
+    public ResponseEntity create(@RequestBody PremiseForm createPremiseForm) {
         Premise premise = new Premise();
 
         mapToEntity(createPremiseForm, premise);
@@ -146,7 +147,7 @@ public class PremiseController {
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping
-    public ResponseEntity update(UpdatePremiseForm premiseForm) {
+    public ResponseEntity update(@RequestBody UpdatePremiseForm premiseForm) {
         Premise premise = premiseRepository.findById(premiseForm.getId())
                 .orElseThrow(() -> new RuntimeException("not found"));
         mapToEntity(premiseForm, premise);
@@ -165,7 +166,7 @@ public class PremiseController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}/comment")
-    public ResponseEntity leaveComment(CommentForm commentForm) {
+    public ResponseEntity leaveComment(@RequestBody CommentForm commentForm) {
         Premise premise = premiseRepository.findById(commentForm.getPremiseId())
                 .orElseThrow(() -> new RuntimeException("not found"));
 

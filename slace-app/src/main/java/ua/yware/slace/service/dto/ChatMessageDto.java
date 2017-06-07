@@ -14,42 +14,21 @@
  * limitations under the License.
  */
 
-package ua.yware.slace.model;
+package ua.yware.slace.service.dto;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import ua.yware.slace.model.enums.PremiseReservationStatus;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
-public class PremiseReservation {
+public class ChatMessageDto {
 
-    @Id
-    private BigInteger id;
+    private String senderId;
 
-    @DBRef
-    private Premise premise;
+    private String message;
 
-    @DBRef
-    private User user;
-
-    private LocalDateTime from;
-
-    private LocalDateTime to;
-
-    private BigDecimal priceRate;
-
-    private PremiseReservationStatus premiseReservationStatus;
+    private LocalDateTime creationDate;
 
 }
