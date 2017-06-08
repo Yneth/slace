@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ import ua.yware.slace.model.PremiseReservation;
 import ua.yware.slace.model.User;
 import ua.yware.slace.service.PremiseService;
 import ua.yware.slace.service.dto.CategoryDto;
+import ua.yware.slace.service.storage.StorageService;
 import ua.yware.slace.service.user.CurrentUserService;
 import ua.yware.slace.web.rest.form.BookPremiseForm;
 import ua.yware.slace.web.rest.form.CommentForm;
@@ -50,7 +52,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/premises")
@@ -58,6 +62,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PremiseController {
 
     private final PremiseService premiseService;
+    private final StorageService storageService;
     private final PremiseRepository premiseRepository;
     private final CurrentUserService currentUserService;
     private final PremiseReservationRepository premiseReservationRepository;
@@ -154,6 +159,26 @@ public class PremiseController {
                 .orElseThrow(() -> new RuntimeException("not found"));
         mapToEntity(premiseForm, premise);
 
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/image")
+    public ResponseEntity uploadImage(@RequestParam("id") String premiseId,
+                                      @RequestParam("file") MultipartFile file) {
+        Premise premise = premiseRepository.findById(new BigInteger(premiseId))
+                .orElseThrow(() -> new RuntimeException("no such premise."));
+
+        String originalFilename = file.getOriginalFilename();
+        String extension = originalFilename.substring(
+                originalFilename.lastIndexOf('.'), originalFilename.length());
+
+        if (Stream.of(".jpeg", ".jpg", ".bmp").noneMatch(s -> s.equals(extension))) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        storageService.store("premise-" + premise.getId() + extension, file);
 
         return new ResponseEntity(HttpStatus.OK);
     }
