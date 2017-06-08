@@ -32,7 +32,6 @@ import ua.yware.slace.service.user.CurrentUserService;
 import ua.yware.slace.web.rest.form.ChangePasswordForm;
 import ua.yware.slace.web.rest.form.UpdateUserForm;
 
->>>>>>> Implement user account update, image upload, password change:slace-app/src/main/java/ua/yware/slace/web/rest/UserController.java
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
