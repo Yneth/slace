@@ -10,7 +10,11 @@ public interface StorageService {
 
     void init();
 
-    void store(MultipartFile file);
+    void store(String fileName, MultipartFile file);
+
+    default void store(MultipartFile file) {
+        this.store(file.getOriginalFilename(), file);
+    }
 
     Stream<Path> loadAll();
 

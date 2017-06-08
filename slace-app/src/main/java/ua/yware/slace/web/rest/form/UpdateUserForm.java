@@ -16,5 +16,25 @@
 
 package ua.yware.slace.web.rest.form;
 
+import lombok.Getter;
+
+@Getter
 public class UpdateUserForm {
+
+    private String email;
+
+    private String phone;
+
+    private String firstName;
+
+    private String lastName;
+
+    private String city;
+
+    private boolean receiveSms;
+
+    private boolean receiveEmail;
+
+    private String about;
+
 }

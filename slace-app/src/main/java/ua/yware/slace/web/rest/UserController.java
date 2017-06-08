@@ -16,8 +16,26 @@
 
 package ua.yware.slace.web.rest;
 
+import java.util.Collections;
+import java.util.stream.Stream;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import lombok.RequiredArgsConstructor;
+import ua.yware.slace.config.jwt.TokenService;
+import ua.yware.slace.dao.UserRepository;
+import ua.yware.slace.model.User;
+import ua.yware.slace.service.dto.JwtTokenDto;
+import ua.yware.slace.service.dto.LoginDto;
+import ua.yware.slace.service.storage.StorageService;
+import ua.yware.slace.service.user.CurrentUserService;
+import ua.yware.slace.web.rest.form.ChangePasswordForm;
+import ua.yware.slace.web.rest.form.UpdateUserForm;
+
+>>>>>>> Implement user account update, image upload, password change:slace-app/src/main/java/ua/yware/slace/web/rest/UserController.java
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,7 +46,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,8 +72,10 @@ import ua.yware.slace.web.rest.form.UpdateUserForm;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-public class AuthenticationController {
+public class UserController {
 
+    private final StorageService storageService;
+    private final CurrentUserService currentUserService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final TokenService tokenService;
@@ -100,14 +122,53 @@ public class AuthenticationController {
         }
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/update")
     public ResponseEntity updateAccount(@RequestBody UpdateUserForm updateUserForm) {
+        User currentUser = currentUserService.getCurrentUser();
+
+        currentUser.setAbout(updateUserForm.getAbout());
+        currentUser.setFirstName(updateUserForm.getFirstName());
+        currentUser.setLastName(updateUserForm.getLastName());
+        currentUser.setCity(updateUserForm.getCity());
+        currentUser.setReceiveEmail(updateUserForm.isReceiveEmail());
+        currentUser.setReceiveSms(updateUserForm.isReceiveSms());
+        currentUser.setEmail(updateUserForm.getEmail());
+        currentUser.setPhone(updateUserForm.getPhone());
+
+        userRepository.save(currentUser);
 
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/password")
     public ResponseEntity changePassword(@RequestBody ChangePasswordForm changePasswordForm) {
+        String newPassword = changePasswordForm.getNewPassword();
+        if (!newPassword.equals(changePasswordForm.getNewPasswordCopy())) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        // TODO send email
+        User currentUser = currentUserService.getCurrentUser();
+        currentUser.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(currentUser);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/image")
+    public ResponseEntity uploadImage(@RequestParam("file") MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+        String extension = originalFilename.substring(
+                originalFilename.lastIndexOf('.'), originalFilename.length());
+
+        if (Stream.of(".jpeg", ".jpg", ".bmp").noneMatch(s -> s.equals(extension))) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        User currentUser = currentUserService.getCurrentUser();
+        storageService.store("profile-" + currentUser.getId() + extension, file);
 
         return new ResponseEntity(HttpStatus.OK);
     }
