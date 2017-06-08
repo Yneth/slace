@@ -28,8 +28,7 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/slace
 
-jwt:
-  secret: testesttes
+jwt.secret: testesttes
 
 storage:
   location: E:\proj\slace\files\
