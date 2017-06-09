@@ -19,6 +19,13 @@
         <dir.dist>target/dist</dir.dist>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>ua.yware</groupId>
+            <artifactId>slace-app</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -26,8 +33,24 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
-                    <warSourceDirectory>${dir.dist}</warSourceDirectory>
+                    <!--<warSourceDirectory>${dir.dist}</warSourceDirectory>-->
+                    <webResources>${basedir}/src</webResources>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>ua.yware.slace.SlaceApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
