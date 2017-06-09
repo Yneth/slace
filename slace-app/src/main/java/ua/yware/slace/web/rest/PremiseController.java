@@ -16,10 +16,24 @@
 
 package ua.yware.slace.web.rest;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -40,21 +54,6 @@ import ua.yware.slace.web.rest.form.BookPremiseForm;
 import ua.yware.slace.web.rest.form.CommentForm;
 import ua.yware.slace.web.rest.form.PremiseForm;
 import ua.yware.slace.web.rest.form.UpdatePremiseForm;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/premises")
@@ -81,7 +80,7 @@ public class PremiseController {
     }
 
     @GetMapping("/{id}")
-    public Premise getPremiseById(@PathVariable("id") UUID id) {
+    public Premise getPremiseById(@PathVariable("id") BigInteger id) {
         return premiseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("No such premise"));
     }
@@ -92,7 +91,7 @@ public class PremiseController {
     }
 
     @GetMapping("/{id}/reservations/nearest")
-    public Iterable<PremiseReservation> getNearestReservations(@PathVariable("id") UUID id) {
+    public Iterable<PremiseReservation> getNearestReservations(@PathVariable("id") BigInteger id) {
         LocalDateTime now = LocalDateTime.now();
         return premiseReservationRepository.findAllByPremiseIdAndFromAfterAndToBefore(
                 id, now.minusMonths(1), now.plusMonths(1));
@@ -120,6 +119,7 @@ public class PremiseController {
         premiseReservation.setUser(currentUser);
         premiseReservation.setPremise(premise);
         premiseReservation.setPriceRate(premise.getPriceRate());
+
 
         premiseReservationRepository.save(premiseReservation);
         return new ResponseEntity(HttpStatus.OK);
@@ -165,9 +165,9 @@ public class PremiseController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/image")
-    public ResponseEntity uploadImage(@RequestParam("id") String premiseId,
+    public ResponseEntity uploadImage(@RequestParam("id") BigInteger premiseId,
                                       @RequestParam("file") MultipartFile file) {
-        Premise premise = premiseRepository.findById(new BigInteger(premiseId))
+        Premise premise = premiseRepository.findById(premiseId)
                 .orElseThrow(() -> new RuntimeException("no such premise."));
 
         String originalFilename = file.getOriginalFilename();
@@ -185,7 +185,7 @@ public class PremiseController {
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable("id") UUID id) {
+    public ResponseEntity delete(@PathVariable("id") BigInteger id) {
         premiseRepository.deleteById(id);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -209,7 +209,7 @@ public class PremiseController {
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{premiseId}/comment/{id}")
-    public ResponseEntity removeComment(@PathVariable("premiseId") UUID premiseId,
+    public ResponseEntity removeComment(@PathVariable("premiseId") BigInteger premiseId,
                                         @PathVariable("id") BigInteger commentId) {
         Premise premise = premiseRepository.findById(premiseId)
                 .orElseThrow(() -> new RuntimeException("no such premise"));

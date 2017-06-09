@@ -25,7 +25,7 @@ import lombok.Setter;
 @Getter
 public class CommentForm {
 
-    private UUID premiseId;
+    private BigInteger premiseId;
 
     private String message;
 

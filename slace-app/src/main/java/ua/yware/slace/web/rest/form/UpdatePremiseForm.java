@@ -24,6 +24,6 @@ import lombok.Getter;
 @Getter
 public class UpdatePremiseForm extends PremiseForm {
 
-    private UUID id;
+    private BigInteger id;
 
 }

@@ -26,7 +26,7 @@ import lombok.Setter;
 @Getter
 public class BookPremiseForm {
 
-    private UUID premiseId;
+    private BigInteger premiseId;
 
     private LocalDateTime from;
 

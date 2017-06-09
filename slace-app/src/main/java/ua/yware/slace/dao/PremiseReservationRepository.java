@@ -29,7 +29,7 @@ import org.springframework.data.repository.CrudRepository;
 public interface PremiseReservationRepository
         extends CrudRepository<PremiseReservation, BigInteger> {
 
-    List<PremiseReservation> findAllByPremiseIdAndFromAfterAndToBefore(UUID id, LocalDateTime from,
+    List<PremiseReservation> findAllByPremiseIdAndFromAfterAndToBefore(BigInteger id, LocalDateTime from,
                                                                        LocalDateTime to);
 
     List<PremiseReservation> findFirstByUserIdAndPremiseOwnerId(BigInteger userId, BigInteger ownerId);

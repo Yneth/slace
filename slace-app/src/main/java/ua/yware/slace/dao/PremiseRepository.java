@@ -20,11 +20,10 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.UUID;
 
 import ua.yware.slace.model.Premise;
 
-public interface PremiseRepository extends CrudRepository<Premise, UUID> {
+public interface PremiseRepository extends CrudRepository<Premise, BigInteger> {
 
     List<Premise> findAllByReservationsUserId(BigInteger id);
 
