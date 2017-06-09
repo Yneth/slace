@@ -16,11 +16,18 @@
 
 package ua.yware.slace.config;
 
+
+import org.eclipse.jetty.websocket.api.WebSocketBehavior;
+import org.eclipse.jetty.websocket.api.WebSocketPolicy;
+
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.server.jetty.JettyRequestUpgradeStrategy;
+import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -28,13 +35,25 @@ public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfig
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/app").withSockJS();
+        registry.addEndpoint("/app")
+                .setHandshakeHandler(handshakeHandler())
+                .setAllowedOrigins("*")
+                .withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.enableSimpleBroker("/queue");
         registry.setApplicationDestinationPrefixes("/app");
+    }
+
+    @Bean
+    public DefaultHandshakeHandler handshakeHandler() {
+        WebSocketPolicy webSocketPolicy = new WebSocketPolicy(WebSocketBehavior.SERVER);
+        webSocketPolicy.setIdleTimeout(600000);
+        webSocketPolicy.setInputBufferSize(8192);
+
+        return new DefaultHandshakeHandler(new JettyRequestUpgradeStrategy(webSocketPolicy));
     }
 
 }
