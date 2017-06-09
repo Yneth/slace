@@ -16,7 +16,12 @@
 
 package ua.yware.slace.config;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.annotation.PostConstruct;
+
 import com.github.mongobee.Mongobee;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -26,16 +31,6 @@ import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoCo
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
-
-import java.io.File;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.annotation.PostConstruct;
-
-import lombok.RequiredArgsConstructor;
 
 @Configuration
 public class MongobeeConfiguration {
@@ -77,16 +72,7 @@ public class MongobeeConfiguration {
                 mongoProperties.setPort(Integer.parseInt(urlMatcher.group("port")));
                 mongoProperties.setDatabase(urlMatcher.group("uri"));
                 mongoProperties.setUri(null);
-            } else {
-                throw new RuntimeException(String.format("Wrong uri: '%s'", uri));
             }
-        }
-
-        private static File[] getResourceFolderFiles (String folder) {
-            ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            URL url = loader.getResource(folder);
-            String path = url.getPath();
-            return new File(path).listFiles();
         }
 
     }
