@@ -16,7 +16,9 @@
 
 package ua.yware.slace.web.rest;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -25,11 +27,14 @@ import lombok.RequiredArgsConstructor;
 import ua.yware.slace.config.jwt.TokenService;
 import ua.yware.slace.dao.UserRepository;
 import ua.yware.slace.model.User;
+import ua.yware.slace.model.UserRole;
 import ua.yware.slace.service.dto.JwtTokenDto;
 import ua.yware.slace.service.dto.LoginDto;
+import ua.yware.slace.service.mail.MailService;
 import ua.yware.slace.service.storage.StorageService;
 import ua.yware.slace.service.user.CurrentUserService;
 import ua.yware.slace.web.rest.form.ChangePasswordForm;
+import ua.yware.slace.web.rest.form.CreateUserForm;
 import ua.yware.slace.web.rest.form.UpdateUserForm;
 
 import org.springframework.http.HttpStatus;
@@ -49,27 +54,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
-import lombok.RequiredArgsConstructor;
-import ua.yware.slace.config.jwt.TokenService;
-import ua.yware.slace.dao.UserRepository;
-import ua.yware.slace.model.User;
-import ua.yware.slace.model.UserRole;
-import ua.yware.slace.service.dto.JwtTokenDto;
-import ua.yware.slace.service.dto.LoginDto;
-import ua.yware.slace.service.mail.MailService;
-import ua.yware.slace.web.rest.form.ChangePasswordForm;
-import ua.yware.slace.web.rest.form.CreateUserForm;
-import ua.yware.slace.web.rest.form.UpdateUserForm;
-
 @RestController
-@RequestMapping("/users")
+@RequestMapping("${api.prefix}/users")
 @RequiredArgsConstructor
 public class UserController {
 

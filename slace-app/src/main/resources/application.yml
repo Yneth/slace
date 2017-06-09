@@ -5,6 +5,7 @@ spring:
     active: local
   mvc:
     static-path-pattern: /**
+api.prefix: /api
 jwt:
   expiration: 10080000
   rememberMeExpiration: 44640000
