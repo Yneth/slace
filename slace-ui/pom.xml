@@ -13,45 +13,19 @@
 
     <artifactId>slace-ui</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+
+    <packaging>jar</packaging>
 
     <properties>
         <dir.dist>target/dist</dir.dist>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>ua.yware</groupId>
-            <artifactId>slace-app</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
-
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <!--<warSourceDirectory>${dir.dist}</warSourceDirectory>-->
-                    <webResources>${basedir}/src</webResources>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>ua.yware.slace.SlaceApplication</mainClass>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
+        <resources>
+            <resource>
+                <directory>src/</directory>
+                <targetPath>public/</targetPath>
+            </resource>
+        </resources>
     </build>
 </project>

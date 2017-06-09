@@ -3,6 +3,8 @@ spring:
     name: slace
   profiles:
     active: local
+  mvc:
+    static-path-pattern: /**
 jwt:
   expiration: 10080000
   rememberMeExpiration: 44640000
@@ -35,4 +37,3 @@ storage:
 
 server:
   port: 8081
----

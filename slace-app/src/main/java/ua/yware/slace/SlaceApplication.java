@@ -9,7 +9,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 @SpringBootApplication
 @EnableConfigurationProperties(StorageProperties.class)
-public class SlaceApplication extends SpringBootServletInitializer {
+public class SlaceApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SlaceApplication.class, args);
