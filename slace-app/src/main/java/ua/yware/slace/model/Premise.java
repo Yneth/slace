@@ -30,7 +30,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@org.springframework.data.elasticsearch.annotations.Document(indexName = "slace", type = "premises")
 @Document
 @Getter
 @Setter
