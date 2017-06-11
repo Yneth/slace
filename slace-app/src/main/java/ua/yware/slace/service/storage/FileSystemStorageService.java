@@ -100,4 +100,13 @@ public class FileSystemStorageService implements StorageService {
             throw new StorageException("Could not initialize storage", e);
         }
     }
+
+    @Override
+    public String getContentType(Resource resource) {
+        try {
+            return Files.probeContentType(rootLocation.resolve(resource.getFilename()));
+        } catch (IOException e) {
+            throw new StorageException("Could not get file content type", e);
+        }
+    }
 }

@@ -14,34 +14,24 @@
  * limitations under the License.
  */
 
-package ua.yware.slace.model;
+package ua.yware.slace.dao;
 
+import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import ua.yware.slace.model.Premise;
+import ua.yware.slace.model.Reservation;
+import ua.yware.slace.model.User;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.repository.CrudRepository;
 
-@Document
-@Getter
-@Setter
-@NoArgsConstructor
-@EqualsAndHashCode(of = "name")
-public class Category {
+public interface ReservationRepository
+        extends CrudRepository<Reservation, BigInteger> {
 
-    @Id
-    private String name;
+    List<Reservation> findAllByPremiseAndFromAfterAndToBefore(Premise premise, LocalDateTime from,
+                                                              LocalDateTime to);
 
-    @DBRef(lazy = true)
-    private List<Premise> premises;
-
-    public Category(String name) {
-        this.name = name;
-    }
+    List<Reservation> findFirstByUserAndPremiseOwner(User user, User owner);
 
 }

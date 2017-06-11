@@ -14,34 +14,21 @@
  * limitations under the License.
  */
 
-package ua.yware.slace.model;
+package ua.yware.slace.service.dto;
 
-import java.util.List;
+import java.math.BigInteger;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document
 @Getter
 @Setter
-@NoArgsConstructor
-@EqualsAndHashCode(of = "name")
-public class Category {
+public class CommentDto {
 
-    @Id
-    private String name;
+    private BigInteger authorId;
 
-    @DBRef(lazy = true)
-    private List<Premise> premises;
+    private String authorName;
 
-    public Category(String name) {
-        this.name = name;
-    }
+    private String message;
 
 }

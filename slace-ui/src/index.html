@@ -5,6 +5,43 @@
     <title>Title</title>
 </head>
 <body>
+<div>
+    <input id="chat-textbox" type="text" value=""/>
+    <button id="chat-send"></button>
+</div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script>
+    var token;
+    $.ajax({
+        type: 'POST',
+        url: '/api/users/authenticate',
+        data: JSON.stringify({"login": "user", "password": "user"}),
+        success: function (data) {
+            token = data.token;
+            var loc = window.location;
+            var webSocketUrl = '//' + loc.host + loc.pathname + 'app';
+            var socket = new SockJS(webSocketUrl + '?jwt=' + token);
+            var client = Stomp.over(socket);
+            client.connect({'Authorization': token}, function (frame) {
+                var suffix = frame.headers['user-id'];
+                client.subscribe('/user/queue/chat.private', function (msg) {
+                    var div = document.createElement('div');
+                    var response = JSON.parse(msg.body);
+                    div.textContent = response.id + ' :  ' + response.message + '    ' + response.creationDate;
+                    document.body.appendChild(div);
+                });
+            });
+            document.getElementById("chat-send").onclick = function (e) {
+                client.send("/app/chat.private", {}, JSON.stringify({receiverId: "1", message: "Hi"}));
+            }
+        },
+        contentType: "application/json",
+        dataType: 'json'
+    });
+
+</script>
 </body>
 </html>

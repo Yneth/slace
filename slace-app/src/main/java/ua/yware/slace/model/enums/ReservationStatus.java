@@ -14,34 +14,11 @@
  * limitations under the License.
  */
 
-package ua.yware.slace.model;
+package ua.yware.slace.model.enums;
 
-import java.util.List;
-
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document
-@Getter
-@Setter
-@NoArgsConstructor
-@EqualsAndHashCode(of = "name")
-public class Category {
-
-    @Id
-    private String name;
-
-    @DBRef(lazy = true)
-    private List<Premise> premises;
-
-    public Category(String name) {
-        this.name = name;
-    }
-
+public enum ReservationStatus {
+    CREATED,
+    APPROVED,
+    PAYED,
+    ARCHIVED,
 }

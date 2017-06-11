@@ -21,9 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.Getter;
-import lombok.Setter;
 import ua.yware.slace.model.Category;
-import ua.yware.slace.model.enums.PremiseCategory;
 
 @Getter
 public class PremiseForm {
@@ -37,8 +35,6 @@ public class PremiseForm {
     private String address;
 
     private List<Category> categories;
-
-    private PremiseCategory category;
 
     private BigDecimal priceRate;
 

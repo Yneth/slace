@@ -17,11 +17,9 @@
 package ua.yware.slace.web.rest;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 import ua.yware.slace.config.jwt.TokenService;
@@ -68,7 +66,7 @@ public class UserController {
     private final MailService mailService;
 
     @PostMapping
-    public ResponseEntity register(CreateUserForm createUserForm) {
+    public ResponseEntity register(@RequestBody CreateUserForm createUserForm) {
         User user = new User();
         user.setAbout(createUserForm.getAbout());
         user.setCity(createUserForm.getCity());
@@ -78,8 +76,9 @@ public class UserController {
         user.setPhone(createUserForm.getPhone());
         user.setEmail(createUserForm.getEmail());
         user.setPassword(passwordEncoder.encode(createUserForm.getPassword()));
+
         List<UserRole> userRoles = new ArrayList<>();
-        userRoles.add(new UserRole("admin"));
+        userRoles.add(new UserRole("user"));
         user.setRoles(userRoles);
 
         userRepository.save(user);
@@ -87,7 +86,7 @@ public class UserController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity authenticate(@Valid @RequestBody LoginDto loginDTO, HttpServletResponse response) {
+    public ResponseEntity authenticate(@RequestBody LoginDto loginDTO, HttpServletResponse response) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDTO.getLogin(), loginDTO.getPassword());
         try {
@@ -97,13 +96,11 @@ public class UserController {
             boolean rememberMe = (loginDTO.getRememberMe() == null) ? false : loginDTO.getRememberMe();
 
             String token = tokenService.createToken(authentication, rememberMe);
-            response.addHeader("Authentication", "Bearer " + token);
+            response.addHeader("Authorization", "Bearer " + token);
 
             return ResponseEntity.ok(new JwtTokenDto(token));
         } catch (AuthenticationException exception) {
-            return new ResponseEntity<>(Collections.singletonMap(
-                    "AuthenticationException", exception.getLocalizedMessage()
-            ), HttpStatus.UNAUTHORIZED);
+            throw new RuntimeException(exception);
         }
     }
 
@@ -148,7 +145,7 @@ public class UserController {
         String extension = originalFilename.substring(
                 originalFilename.lastIndexOf('.'), originalFilename.length());
 
-        if (Stream.of(".jpeg", ".jpg", ".bmp").noneMatch(s -> s.equals(extension))) {
+        if (Stream.of(".jpeg", ".jpg", ".png").noneMatch(s -> s.equals(extension))) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
 

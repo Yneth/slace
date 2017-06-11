@@ -18,33 +18,35 @@ package ua.yware.slace.web.rest;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import lombok.RequiredArgsConstructor;
 import ua.yware.slace.dao.CategoryRepository;
+import ua.yware.slace.dao.CommentRepository;
 import ua.yware.slace.dao.PremiseRepository;
-import ua.yware.slace.dao.PremiseReservationRepository;
 import ua.yware.slace.model.Comment;
 import ua.yware.slace.model.Premise;
-import ua.yware.slace.model.PremiseReservation;
 import ua.yware.slace.model.User;
-import ua.yware.slace.service.PremiseService;
+import ua.yware.slace.service.premise.PremiseSearchService;
+import ua.yware.slace.service.premise.PremiseService;
 import ua.yware.slace.service.dto.CategoryDto;
+import ua.yware.slace.service.dto.CommentDto;
+import ua.yware.slace.service.dto.PremiseDto;
 import ua.yware.slace.service.storage.StorageService;
 import ua.yware.slace.service.user.CurrentUserService;
-import ua.yware.slace.web.rest.form.BookPremiseForm;
+import ua.yware.slace.web.exception.ResourceNotFoundException;
 import ua.yware.slace.web.rest.form.CommentForm;
 import ua.yware.slace.web.rest.form.PremiseForm;
+import ua.yware.slace.web.rest.form.PremiseSearchForm;
 import ua.yware.slace.web.rest.form.UpdatePremiseForm;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,12 +62,20 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class PremiseController {
 
+    private final PremiseSearchService premiseSearchService;
     private final PremiseService premiseService;
     private final StorageService storageService;
     private final PremiseRepository premiseRepository;
     private final CurrentUserService currentUserService;
-    private final PremiseReservationRepository premiseReservationRepository;
     private final CategoryRepository categoryRepository;
+    private final CommentRepository commentRepository;
+
+    @GetMapping("/search")
+    public Iterable<PremiseDto> searchPremises(PremiseSearchForm premiseSearchFrom) {
+        return premiseSearchService.findAll(premiseSearchFrom).stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
 
     @GetMapping("/categories")
     public Iterable<CategoryDto> getPremiseCategories() {
@@ -75,76 +85,41 @@ public class PremiseController {
     }
 
     @GetMapping("/popular")
-    public Iterable<Premise> getPopularPremises() {
-        return premiseRepository.findAll();
+    public Iterable<PremiseDto> getPopularPremises() {
+        return StreamSupport.stream(premiseRepository.findAll().spliterator(), false)
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public Premise getPremiseById(@PathVariable("id") BigInteger id) {
+    public PremiseDto getPremiseById(@PathVariable("id") BigInteger id) {
         return premiseRepository.findById(id)
+                .map(this::mapToDto)
                 .orElseThrow(() -> new RuntimeException("No such premise"));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/user")
-    public Iterable<Premise> getUserPremises() {
-        return premiseRepository.findAllByOwnerId(currentUserService.getCurrentUser().getId());
-    }
-
-    @GetMapping("/{id}/reservations/nearest")
-    public Iterable<PremiseReservation> getNearestReservations(@PathVariable("id") BigInteger id) {
-        LocalDateTime now = LocalDateTime.now();
-        return premiseReservationRepository.findAllByPremiseIdAndFromAfterAndToBefore(
-                id, now.minusMonths(1), now.plusMonths(1));
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @Transactional
-    @PostMapping("{id}/reservations")
-    public ResponseEntity bookPremise(@RequestBody BookPremiseForm bookPremiseForm) {
-        // TODO if owner
-        // TODO else other users
-        User currentUser = currentUserService.getCurrentUser();
-        Premise premise = premiseRepository.findById(bookPremiseForm.getPremiseId())
-                .orElseThrow(() -> new RuntimeException("No such premise"));
-
-        List<PremiseReservation> reservations = premiseReservationRepository.findAllByPremiseIdAndFromAfterAndToBefore(
-                bookPremiseForm.getPremiseId(), bookPremiseForm.getFrom(), bookPremiseForm.getTo());
-        if (!reservations.isEmpty()) {
-            throw new RuntimeException("Already booked!");
-        }
-
-        PremiseReservation premiseReservation = new PremiseReservation();
-        premiseReservation.setFrom(bookPremiseForm.getFrom());
-        premiseReservation.setTo(bookPremiseForm.getTo());
-        premiseReservation.setUser(currentUser);
-        premiseReservation.setPremise(premise);
-        premiseReservation.setPriceRate(premise.getPriceRate());
-
-
-        premiseReservationRepository.save(premiseReservation);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-
-    @PreAuthorize("isAuthenticated()")
-    @Transactional
-    @PostMapping("/{premiseId}/reservations/{id}/cancel")
-    public ResponseEntity cancelReservation(@PathVariable("id") BigInteger id) {
-        premiseReservationRepository.deleteById(id);
-        return new ResponseEntity(HttpStatus.OK);
+    public Iterable<PremiseDto> getUserPremises() {
+        return premiseRepository.findAllByOwner(currentUserService.getCurrentUser())
+                .stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/reserved")
-    public Iterable<Premise> listReserved() {
-        return premiseRepository.findAllByReservationsUserId(currentUserService.getCurrentUser().getId());
+    public Iterable<PremiseDto> listReserved() {
+        return premiseRepository.findAllByReservationsUser(currentUserService.getCurrentUser())
+                .stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping
     public ResponseEntity create(@RequestBody PremiseForm createPremiseForm) {
         Premise premise = new Premise();
-
         mapToEntity(createPremiseForm, premise);
 
         premiseService.save(premise);
@@ -159,22 +134,28 @@ public class PremiseController {
                 .orElseThrow(() -> new RuntimeException("not found"));
         mapToEntity(premiseForm, premise);
 
+        premiseService.save(premise);
 
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/image")
-    public ResponseEntity uploadImage(@RequestParam("id") BigInteger premiseId,
+    @PostMapping("/{id}/image")
+    public ResponseEntity uploadImage(@PathVariable("id") BigInteger premiseId,
                                       @RequestParam("file") MultipartFile file) {
         Premise premise = premiseRepository.findById(premiseId)
                 .orElseThrow(() -> new RuntimeException("no such premise."));
+//         TODO: investigate how to get lazily loaded object
+//        if (!currentUserService.getCurrentUser().equals(premise.getOwner())) {
+        if (!currentUserService.getCurrentUser().getId().equals(premise.getOwner().getId())) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
 
         String originalFilename = file.getOriginalFilename();
         String extension = originalFilename.substring(
                 originalFilename.lastIndexOf('.'), originalFilename.length());
 
-        if (Stream.of(".jpeg", ".jpg", ".bmp").noneMatch(s -> s.equals(extension))) {
+        if (Stream.of(".jpeg", ".jpg", ".png").noneMatch(s -> s.equals(extension))) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
 
@@ -194,13 +175,14 @@ public class PremiseController {
     @PostMapping("/{id}/comment")
     public ResponseEntity leaveComment(@RequestBody CommentForm commentForm) {
         Premise premise = premiseRepository.findById(commentForm.getPremiseId())
-                .orElseThrow(() -> new RuntimeException("not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("not found"));
 
         Comment comment = new Comment();
         comment.setCreationDate(LocalDateTime.now());
         comment.setOwner(currentUserService.getCurrentUser());
         comment.setMessage(commentForm.getMessage());
-        premise.getComments().add(comment);
+
+        premise.getComments().add(commentRepository.save(comment));
 
         premiseRepository.save(premise);
 
@@ -214,11 +196,34 @@ public class PremiseController {
         Premise premise = premiseRepository.findById(premiseId)
                 .orElseThrow(() -> new RuntimeException("no such premise"));
 
-        premise.setComments(premise.getComments()
-                .stream()
-                .filter(c -> c.getId().equals(commentId))
-                .collect(Collectors.toList()));
+        premise.removeComment(commentId);
+        premiseService.save(premise);
+
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    private PremiseDto mapToDto(Premise premise) {
+        PremiseDto dto = new PremiseDto();
+        dto.setAbout(premise.getAbout());
+        dto.setAddress(premise.getAddress());
+        dto.setName(premise.getName());
+        dto.setArea(premise.getArea());
+        dto.setSpace(premise.getSpace());
+        dto.setPriceRate(premise.getPriceRate());
+        dto.setId(premise.getId());
+        dto.setTotalEstimation(premise.getTotalEstimation());
+        dto.setEquipment(premise.getEquipment());
+        dto.setComments(premise.getComments()
+                .stream()
+                .map(c -> {
+                    CommentDto commentDto = new CommentDto();
+                    User owner = c.getOwner();
+                    commentDto.setAuthorId(owner.getId());
+                    commentDto.setAuthorName(owner.getFirstName());
+                    commentDto.setMessage(c.getMessage());
+                    return commentDto;
+                }).collect(Collectors.toList()));
+        return dto;
     }
 
     private void mapToEntity(PremiseForm premiseForm, Premise premise) {
@@ -232,6 +237,11 @@ public class PremiseController {
         premise.setSpace(premiseForm.getSpace());
         premise.setCategories(premiseForm.getCategories());
         premise.setPriceRate(premiseForm.getPriceRate());
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> premiseNotFound() {
+        return new ResponseEntity<>("Premise not found", HttpStatus.NOT_FOUND);
     }
 
 }

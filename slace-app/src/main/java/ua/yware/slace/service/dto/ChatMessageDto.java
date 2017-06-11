@@ -18,6 +18,7 @@ package ua.yware.slace.service.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,6 +30,7 @@ public class ChatMessageDto {
 
     private String message;
 
+    @JsonFormat(pattern = "yyyy-mm-dd hh:mm:ss")
     private LocalDateTime creationDate;
 
 }

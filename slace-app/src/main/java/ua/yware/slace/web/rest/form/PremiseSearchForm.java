@@ -16,15 +16,45 @@
 
 package ua.yware.slace.web.rest.form;
 
-import java.math.BigInteger;
+import java.time.LocalDate;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-public class ChatMessageForm {
+@Setter
+public class PremiseSearchForm {
 
-    private BigInteger receiverId;
+    private Integer placeFrom;
 
-    private String message;
+    private Integer placeTo;
+
+    private Integer areaFrom;
+
+    private Integer areaTo;
+
+    private Integer priceFrom;
+
+    private Integer priceTo;
+
+    private boolean daily;
+
+    private String city;
+
+    private String category;
+
+    private LocalDate date;
+
+    public boolean isPlaceRangeSpecified() {
+        return placeFrom != null && placeTo != null;
+    }
+
+    public boolean isAreaRangeSpecified() {
+        return areaFrom != null && areaTo != null;
+    }
+
+    public boolean isPriceRangeSpecified() {
+        return priceFrom != null && priceTo != null;
+    }
 
 }

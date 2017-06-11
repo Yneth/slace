@@ -14,24 +14,32 @@
  * limitations under the License.
  */
 
-package ua.yware.slace.dao;
+package ua.yware.slace.service.dto;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
 
-import ua.yware.slace.model.Premise;
-import ua.yware.slace.model.PremiseReservation;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
+import lombok.Setter;
+import ua.yware.slace.model.enums.ReservationStatus;
 
-import org.springframework.data.repository.CrudRepository;
+@Getter
+@Setter
+public class ReservationDto {
 
-public interface PremiseReservationRepository
-        extends CrudRepository<PremiseReservation, BigInteger> {
+    private BigInteger id;
 
-    List<PremiseReservation> findAllByPremiseIdAndFromAfterAndToBefore(BigInteger id, LocalDateTime from,
-                                                                       LocalDateTime to);
+    // TODO: JSR lib needed for java8 date support
+    @JsonFormat(pattern = "yyyy-mm-dd hh:mm:ss")
+    private LocalDateTime from;
 
-    List<PremiseReservation> findFirstByUserIdAndPremiseOwnerId(BigInteger userId, BigInteger ownerId);
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    private LocalDateTime to;
+
+    private BigDecimal priceRate;
+
+    private ReservationStatus reservationStatus;
 
 }

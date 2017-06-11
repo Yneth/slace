@@ -16,17 +16,18 @@
 
 package ua.yware.slace.dao;
 
-import org.springframework.data.repository.CrudRepository;
-
 import java.math.BigInteger;
 import java.util.List;
 
 import ua.yware.slace.model.Premise;
+import ua.yware.slace.model.User;
+
+import org.springframework.data.repository.CrudRepository;
 
 public interface PremiseRepository extends CrudRepository<Premise, BigInteger> {
 
-    List<Premise> findAllByReservationsUserId(BigInteger id);
+    List<Premise> findAllByReservationsUser(User user);
 
-    List<Premise> findAllByOwnerId(BigInteger id);
+    List<Premise> findAllByOwner(User owner);
 
 }

@@ -18,9 +18,10 @@ package ua.yware.slace.model;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -37,7 +38,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Premise {
 
     @Id
-    private UUID id;
+    private BigInteger id;
 
     private String name;
 
@@ -45,10 +46,16 @@ public class Premise {
 
     private Integer area;
 
+    private Double lon;
+
+    private Double lat;
+
+    private City city;
+
     private String address;
 
     @DBRef(lazy = true)
-    private List<Category> categories;
+    private List<Category> categories = new ArrayList<>();
 
     private String imageUri;
 
@@ -56,7 +63,7 @@ public class Premise {
 
     private int totalEstimation;
 
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     private List<String> equipment;
 
@@ -66,10 +73,17 @@ public class Premise {
 
     private String about;
 
-    @DBRef
+    @DBRef(lazy = true)
     private User owner;
 
     @DBRef(lazy = true)
-    private List<PremiseReservation> reservations;
+    private List<Reservation> reservations = new ArrayList<>();
+
+    public void removeComment(BigInteger id) {
+        comments = getComments()
+                .stream()
+                .filter(c -> c.getId().equals(id))
+                .collect(Collectors.toList());
+    }
 
 }

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package ua.yware.slace.model.enums;
+package ua.yware.slace.web.exception;
 
-public enum PremiseReservationStatus {
-    RESERVED,
-    APPROVED,
-    PAYED,
-    FINISHED,
-    CANCELED,
+public class ResourceNotFoundException extends RuntimeException {
+
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+
 }

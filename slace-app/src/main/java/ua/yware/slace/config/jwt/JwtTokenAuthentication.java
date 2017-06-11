@@ -1,0 +1,50 @@
+/*
+ * Copyright 2012-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package ua.yware.slace.config.jwt;
+
+import java.util.Collection;
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+
+@Getter
+@EqualsAndHashCode(callSuper = true)
+public class JwtTokenAuthentication extends AbstractAuthenticationToken {
+
+    private Object principal;
+
+    private String credentials;
+
+
+    /**
+     * Creates a token with the supplied array of authorities.
+     *
+     * @param authorities the collection of <tt>GrantedAuthority</tt>s for the principal
+     *                    represented by this authentication object.
+     */
+    public JwtTokenAuthentication(Object principal,
+                                  String token,
+                                  Collection<? extends GrantedAuthority> authorities) {
+        super(authorities);
+        this.principal = principal;
+        this.credentials = token;
+    }
+
+}

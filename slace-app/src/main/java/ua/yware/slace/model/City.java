@@ -16,40 +16,26 @@
 
 package ua.yware.slace.model;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 
-import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ua.yware.slace.model.enums.PremiseReservationStatus;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
-public class PremiseReservation {
+@NoArgsConstructor
+@AllArgsConstructor
+public class City {
 
     @Id
     private BigInteger id;
 
-    @DBRef
-    private Premise premise;
-
-    @DBRef
-    private User user;
-
-    private LocalDateTime from;
-
-    private LocalDateTime to;
-
-    private BigDecimal priceRate;
-
-    private PremiseReservationStatus premiseReservationStatus;
+    private String name;
 
 }

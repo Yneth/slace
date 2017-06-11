@@ -16,17 +16,19 @@
 
 package ua.yware.slace.web.websocket;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
-import ua.yware.slace.dao.PremiseReservationRepository;
+import ua.yware.slace.dao.ChatMessageRepository;
+import ua.yware.slace.dao.ReservationRepository;
 import ua.yware.slace.facade.ChatFacade;
 import ua.yware.slace.model.ChatMessage;
+import ua.yware.slace.model.Reservation;
 import ua.yware.slace.model.User;
 import ua.yware.slace.service.dto.ChatMessageDto;
 import ua.yware.slace.service.user.CurrentUserService;
+import ua.yware.slace.service.user.UserService;
 import ua.yware.slace.web.rest.form.ChatMessageForm;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -40,10 +42,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ChatController {
 
-    private final PremiseReservationRepository premiseReservationRepository;
+    private final ReservationRepository premiseReservationRepository;
     private final ChatFacade chatFacade;
     private final CurrentUserService currentUserService;
+    private final UserService userService;
     private final SimpMessageSendingOperations messagingTemplate;
+    private final ChatMessageRepository chatMessageRepository;
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/chat/{userId}")
@@ -51,23 +55,31 @@ public class ChatController {
         return chatFacade.loadHistory(userId);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @MessageMapping("/chat.private")
     public void sendPrivateMessage(ChatMessageForm chatMessageForm) {
         User currentUser = currentUserService.getCurrentUser();
+        User receiver = userService.getById(chatMessageForm.getReceiverId());
+
         ChatMessageDto chatMessageDto = new ChatMessageDto();
 
         chatMessageDto.setSenderId(currentUser.getId().toString());
         chatMessageDto.setCreationDate(LocalDateTime.now());
         chatMessageDto.setMessage(chatMessageForm.getMessage());
 
-        if (premiseReservationRepository.findFirstByUserIdAndPremiseOwnerId(
-                currentUser.getId(), new BigInteger(chatMessageForm.getReceiverId())) == null) {
+        List<Reservation> firstByUserAndPremiseOwner =
+                premiseReservationRepository.findFirstByUserAndPremiseOwner(currentUser, receiver);
+        if (firstByUserAndPremiseOwner.isEmpty()) {
             messagingTemplate.convertAndSendToUser(currentUser.getId().toString(),
                     "/queue/private", "cannot write this user");
             return;
         }
+        // TODO: Should persist messages in a database
+        // TODO: add profanity checks
+//        chatMessageRepository.save(chatMessage);
 
-        messagingTemplate.convertAndSendToUser(chatMessageForm.getReceiverId(),
+        // TODO: BigInteger toString may not work as expected
+        messagingTemplate.convertAndSendToUser(chatMessageForm.getReceiverId().toString(),
                 "/queue/private", chatMessageDto);
     }
 

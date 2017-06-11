@@ -27,7 +27,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -38,17 +37,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final JwtAuthenticationFilter authenticationFilter;
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .anyRequest().permitAll()
-//                .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+        http.authorizeRequests().anyRequest().permitAll()
+//        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
                 .and().csrf().disable()
                 .headers().frameOptions().disable()
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+//                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().addFilterBefore(authFilter(tokenService()), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
@@ -57,12 +53,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public static TokenService tokenService() {
+    public TokenService tokenService() {
         return new JwtTokenService();
     }
 
-    @Bean
-    public static JwtAuthenticationFilter authenticationFilter(TokenService tokenService) {
+    private JwtAuthenticationFilter authFilter(TokenService tokenService) {
         return new JwtAuthenticationFilter(tokenService);
     }
 

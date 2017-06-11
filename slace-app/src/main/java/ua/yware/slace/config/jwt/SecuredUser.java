@@ -14,34 +14,29 @@
  * limitations under the License.
  */
 
-package ua.yware.slace.model;
+package ua.yware.slace.config.jwt;
 
-import java.util.List;
+import java.security.Principal;
+import java.util.Collection;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
 
-@Document
 @Getter
-@Setter
-@NoArgsConstructor
-@EqualsAndHashCode(of = "name")
-public class Category {
+public class SecuredUser implements Principal {
 
-    @Id
-    private String name;
+    private final String login;
+    private final Collection<GrantedAuthority> authorities;
 
-    @DBRef(lazy = true)
-    private List<Premise> premises;
+    public SecuredUser(String login, Collection<GrantedAuthority> authorities) {
+        this.login = login;
+        this.authorities = authorities;
+    }
 
-    public Category(String name) {
-        this.name = name;
+    @Override
+    public String getName() {
+        return login;
     }
 
 }

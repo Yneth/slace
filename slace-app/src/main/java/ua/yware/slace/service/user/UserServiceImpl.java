@@ -16,9 +16,12 @@
 
 package ua.yware.slace.service.user;
 
+import java.math.BigInteger;
+
 import lombok.AllArgsConstructor;
 import ua.yware.slace.dao.UserRepository;
 import ua.yware.slace.model.User;
+import ua.yware.slace.web.exception.ResourceNotFoundException;
 
 import org.springframework.stereotype.Service;
 
@@ -27,6 +30,12 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    @Override
+    public User getById(BigInteger id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No such user!"));
+    }
 
     @Override
     public User findByLogin(String login) {

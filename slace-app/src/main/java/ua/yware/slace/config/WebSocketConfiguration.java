@@ -17,10 +17,13 @@
 package ua.yware.slace.config;
 
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.websocket.api.WebSocketBehavior;
 import org.eclipse.jetty.websocket.api.WebSocketPolicy;
+import ua.yware.slace.config.jwt.JwtHandshakeInterceptor;
+import ua.yware.slace.config.jwt.TokenService;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
@@ -29,14 +32,18 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.server.jetty.JettyRequestUpgradeStrategy;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
+@Slf4j
 @Configuration
 @EnableWebSocketMessageBroker
+@RequiredArgsConstructor
 public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfigurer {
+
+    private final TokenService tokenService;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/app")
-                .setHandshakeHandler(handshakeHandler())
+                .setHandshakeHandler(handshakeHandler(tokenService))
                 .setAllowedOrigins("*")
                 .withSockJS();
     }
@@ -47,13 +54,13 @@ public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfig
         registry.setApplicationDestinationPrefixes("/app");
     }
 
-    @Bean
-    public DefaultHandshakeHandler handshakeHandler() {
+    private DefaultHandshakeHandler handshakeHandler(TokenService tokenService) {
         WebSocketPolicy webSocketPolicy = new WebSocketPolicy(WebSocketBehavior.SERVER);
         webSocketPolicy.setIdleTimeout(600000);
         webSocketPolicy.setInputBufferSize(8192);
 
-        return new DefaultHandshakeHandler(new JettyRequestUpgradeStrategy(webSocketPolicy));
+        return new JwtHandshakeInterceptor(
+                new JettyRequestUpgradeStrategy(webSocketPolicy), tokenService);
     }
 
 }

@@ -16,12 +16,14 @@
 
 package ua.yware.slace.model;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDateTime;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ua.yware.slace.model.enums.ReservationStatus;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -30,18 +32,24 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 @Getter
 @Setter
-@NoArgsConstructor
-@EqualsAndHashCode(of = "name")
-public class Category {
+@EqualsAndHashCode(of = "id")
+public class Reservation {
 
     @Id
-    private String name;
+    private BigInteger id;
 
     @DBRef(lazy = true)
-    private List<Premise> premises;
+    private Premise premise;
 
-    public Category(String name) {
-        this.name = name;
-    }
+    @DBRef(lazy = true)
+    private User user;
+
+    private LocalDateTime from;
+
+    private LocalDateTime to;
+
+    private BigDecimal priceRate;
+
+    private ReservationStatus reservationStatus;
 
 }

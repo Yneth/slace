@@ -14,34 +14,47 @@
  * limitations under the License.
  */
 
-package ua.yware.slace.model;
+package ua.yware.slace.service.dto;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document
 @Getter
 @Setter
-@NoArgsConstructor
-@EqualsAndHashCode(of = "name")
-public class Category {
+public class PremiseDto {
 
-    @Id
+    private BigInteger id;
+
     private String name;
 
-    @DBRef(lazy = true)
-    private List<Premise> premises;
+    private Integer space;
 
-    public Category(String name) {
-        this.name = name;
-    }
+    private Integer area;
+
+    private String address;
+
+    private List<String> categories = new ArrayList<>();
+
+    private String imageUri;
+
+    private BigDecimal priceRate;
+
+    private int totalEstimation;
+
+    private List<CommentDto> comments = new ArrayList<>();
+
+    private List<String> equipment;
+
+    private Map<String, String> schedule;
+
+    private String description;
+
+    private String about;
 
 }

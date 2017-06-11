@@ -16,21 +16,21 @@
 
 package ua.yware.slace.config.jwt;
 
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.core.Authentication;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 
-public class JwtAuthenticationProvider implements AuthenticationProvider {
-
-    @Override
-    public Authentication authenticate(Authentication authentication)
-            throws AuthenticationException {
-        return null;
-    }
+public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
-    public boolean supports(Class<?> authentication) {
-        return true;
+    public void commence(HttpServletRequest request, HttpServletResponse response,
+                         AuthenticationException authException)
+            throws IOException, ServletException {
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
     }
 
 }

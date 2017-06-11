@@ -17,16 +17,15 @@
 package ua.yware.slace.service.user;
 
 import lombok.RequiredArgsConstructor;
+import ua.yware.slace.config.jwt.SecuredUser;
 import ua.yware.slace.dao.UserRepository;
 import ua.yware.slace.model.User;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.annotation.RequestScope;
 
 @Service
-@RequestScope
 @RequiredArgsConstructor
 public class CurrentUserServiceImpl implements CurrentUserService {
 
@@ -35,7 +34,8 @@ public class CurrentUserServiceImpl implements CurrentUserService {
     @Override
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return userRepository.findByLogin((String) authentication.getDetails());
+        SecuredUser principal = (SecuredUser) authentication.getPrincipal();
+        return userRepository.findByLogin(principal.getLogin());
     }
 
 }

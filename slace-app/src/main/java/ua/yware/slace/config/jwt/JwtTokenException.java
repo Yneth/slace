@@ -14,34 +14,19 @@
  * limitations under the License.
  */
 
-package ua.yware.slace.model;
+package ua.yware.slace.config.jwt;
 
-import java.util.List;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.security.core.AuthenticationException;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+public class JwtTokenException extends AuthenticationException {
 
-@Document
-@Getter
-@Setter
-@NoArgsConstructor
-@EqualsAndHashCode(of = "name")
-public class Category {
+    public JwtTokenException(String msg, Throwable t) {
+        super(msg, t);
+    }
 
-    @Id
-    private String name;
-
-    @DBRef(lazy = true)
-    private List<Premise> premises;
-
-    public Category(String name) {
-        this.name = name;
+    public JwtTokenException(String msg) {
+        super(msg);
     }
 
 }

@@ -1,15 +1,14 @@
 {
-  "name": "angular2-webpack-starter",
-  "version": "6.0.0",
-  "description": "An Angular 2 Webpack Starter kit featuring Angular 2 (Router, Http, Forms, Services, Tests, E2E, Coverage), Karma, Protractor, Jasmine, Istanbul, TypeScript, and Webpack by AngularClass",
+  "name": "slace",
+  "version": "1.0.0",
+  "description": "",
   "keywords": [
     "angular",
     "angular2",
     "webpack",
     "typescript"
   ],
-  "author": "Patrick Stapleton <patrick@angularclass.com>",
-  "homepage": "https://github.com/angularclass/angular2-webpack-starter",
+  "author": "Anton Bondarenko",
   "license": "MIT",
   "scripts": {
     "build:aot:prod": "npm run clean:dist && npm run clean:aot && cross-env BUILD_AOT=1 npm run webpack -- --config config/webpack.prod.js  --progress --profile --bail",
@@ -87,6 +86,7 @@
     "ie-shim": "^0.1.0",
     "reflect-metadata": "^0.1.10",
     "rxjs": "~5.0.2",
+    "sockjs-client": "^1.1.4",
     "zone.js": "0.8.5"
   },
   "devDependencies": {
@@ -156,10 +156,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/angularclass/angular2-webpack-starter.git"
-  },
-  "bugs": {
-    "url": "https://github.com/angularclass/angular2-webpack-starter/issues"
+    "url": "https://bitbucket.org/Yneth/slace"
   },
   "engines": {
     "node": ">= 4.2.1",
