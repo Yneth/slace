@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.yware.slace.config.jwt;
+package ua.yware.slace.config.jwt.exception;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,6 +25,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import ua.yware.slace.config.jwt.SecuredUser;
+import ua.yware.slace.config.jwt.TokenService;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

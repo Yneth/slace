@@ -17,10 +17,14 @@
 package ua.yware.slace.service.user;
 
 
+import java.security.Principal;
+
 import ua.yware.slace.model.User;
 
 public interface CurrentUserService {
 
     User getCurrentUser();
+
+    User getCurrentUser(Principal user);
 
 }

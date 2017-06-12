@@ -16,49 +16,46 @@
 
 package ua.yware.slace.config.jwt;
 
-import java.util.Map;
-
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import ua.yware.slace.config.jwt.exception.InvalidTokenException;
 
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.stomp.StompCommand;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptorAdapter;
+import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 @RequiredArgsConstructor
 public class JwtWebSocketChannelInterceptor extends ChannelInterceptorAdapter {
+//    private static final MessageMatcher<StompCommand> MATCHER =
 
     private final TokenService jwtTokenService;
 
+    @Setter
+    private String authorizationHeader = "Authorization";
+
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
-        message.getHeaders().get("nativeHeaders");
-        SimpMessageHeaderAccessor wrap = SimpMessageHeaderAccessor.wrap(message);
-        String authorization = wrap.getFirstNativeHeader("Authorization");
-        int i = 0;
-        Map<String, Object> sessionAttributes = SimpMessageHeaderAccessor.getSessionAttributes(message.getHeaders());
-//        String token = (String) Optional.of(accessor.getMessageHeaders())
-//                .map(m -> (GenericMessage) m.get("simpConnectMessage"))
-//                .map(GenericMessage::getHeaders)
-//                .map(m -> (Map) m.get("nativeHeaders"))
-//                .map(m -> (List) m.get("Authorization"))
-//                .map(Collection::stream)
-//                .flatMap(Stream::findFirst)
-//                .orElse(null);
-
-//        String token = accessor.getFirstNativeHeader("Authorization");
-//        if (StringUtils.isEmpty(token)) {
-//            return message;
-//        }
-//        try {
-//            jwtTokenService.validateToken(token);
-//            accessor.setLeaveMutable(true);
-//            accessor.setUser(jwtTokenService.getAuthentication(token));
-//        } catch (InvalidTokenException e) {
-//            log.debug("Failed to validate user token", e);
-//        }
+        StompHeaderAccessor accessor =
+                MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+        if (!StompCommand.CONNECT.equals(accessor.getCommand())) {
+            return message;
+        }
+        String token = accessor.getFirstNativeHeader(authorizationHeader);
+        if (StringUtils.isEmpty(token)) {
+            return message;
+        }
+        try {
+            jwtTokenService.validateToken(token);
+            accessor.setUser(jwtTokenService.getAuthentication(token));
+        } catch (InvalidTokenException e) {
+            log.debug("Failed to validate user token", e);
+        }
         return message;
     }
 

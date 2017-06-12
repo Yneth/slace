@@ -24,7 +24,6 @@ import ua.yware.slace.dao.ChatMessageRepository;
 import ua.yware.slace.dao.ReservationRepository;
 import ua.yware.slace.facade.ChatFacade;
 import ua.yware.slace.model.ChatMessage;
-import ua.yware.slace.model.Reservation;
 import ua.yware.slace.model.User;
 import ua.yware.slace.service.dto.ChatMessageDto;
 import ua.yware.slace.service.user.CurrentUserService;
@@ -60,27 +59,31 @@ public class ChatController {
     public void sendPrivateMessage(ChatMessageForm chatMessageForm) {
         User currentUser = currentUserService.getCurrentUser();
         User receiver = userService.getById(chatMessageForm.getReceiverId());
+        if (currentUser.equals(receiver)) {
+            messagingTemplate.convertAndSendToUser(currentUser.getLogin(),
+                    "/queue/chat.private", "{\"message\": \"You cannot write yourself\"}");
+            return;
+        }
 
         ChatMessageDto chatMessageDto = new ChatMessageDto();
 
         chatMessageDto.setSenderId(currentUser.getId().toString());
+        chatMessageDto.setSenderName(currentUser.getFullName());
         chatMessageDto.setCreationDate(LocalDateTime.now());
         chatMessageDto.setMessage(chatMessageForm.getMessage());
 
-        List<Reservation> firstByUserAndPremiseOwner =
-                premiseReservationRepository.findFirstByUserAndPremiseOwner(currentUser, receiver);
-        if (firstByUserAndPremiseOwner.isEmpty()) {
-            messagingTemplate.convertAndSendToUser(currentUser.getId().toString(),
-                    "/queue/private", "cannot write this user");
-            return;
-        }
+//        List<Reservation> firstByUserAndPremiseOwner =
+//                premiseReservationRepository.findFirstByUserAndPremiseOwner(currentUser, receiver);
+//        if (firstByUserAndPremiseOwner.isEmpty()) {
+//            messagingTemplate.convertAndSendToUser(currentUser.getLogin(),
+//                    "/queue/chat.private", "{\"message\": \"You cannot write this user\"}");
+//            return;
+//        }
         // TODO: Should persist messages in a database
         // TODO: add profanity checks
 //        chatMessageRepository.save(chatMessage);
 
-        // TODO: BigInteger toString may not work as expected
-        messagingTemplate.convertAndSendToUser(chatMessageForm.getReceiverId().toString(),
-                "/queue/private", chatMessageDto);
+        messagingTemplate.convertAndSendToUser(receiver.getLogin(), "/queue/chat.private", chatMessageDto);
     }
 
 }

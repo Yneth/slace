@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.yware.slace.config.jwt;
+package ua.yware.slace.config.jwt.exception;
 
 public class InvalidTokenException extends Exception {
 

@@ -26,7 +26,6 @@ import lombok.Setter;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document
 @Getter
@@ -60,5 +59,9 @@ public class User {
     private String imageUri;
 
     private List<UserRole> roles = new ArrayList<>();
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 
 }

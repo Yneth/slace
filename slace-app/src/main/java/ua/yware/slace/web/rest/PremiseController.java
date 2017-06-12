@@ -110,7 +110,7 @@ public class PremiseController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/reserved")
     public Iterable<PremiseDto> listReserved() {
-        return premiseRepository.findAllByReservationsUser(currentUserService.getCurrentUser())
+        return premiseRepository.findPremisesReservedBy(currentUserService.getCurrentUser())
                 .stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());

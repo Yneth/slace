@@ -63,8 +63,9 @@ public class InitialChangeLog {
     public void initUsers(MongoTemplate template) {
         User admin = new User();
         admin.setId(BigInteger.ZERO);
+        admin.setFirstName("Gennadiy");
+        admin.setLastName("Kovalsky");
         admin.setEmail("admin@admin.com");
-
         admin.setLogin("admin");
         admin.setPassword("$2a$10$Z2xkJqu62r.0DZ0xn/24AurLIKKZrxgT4a1iNYrr9p3reRbZsfB1W");
 
@@ -75,6 +76,8 @@ public class InitialChangeLog {
 
         User user = new User();
         user.setId(BigInteger.ONE);
+        user.setFirstName("Vova");
+        user.setLastName("Yurko");
         user.setEmail("user@user.com");
         user.setLogin("user");
         user.setPassword("$2a$10$hH5QaV01tEq90KqsQP.00exZbEFFcXmkI7CmEuTIjkGfUL4JOI3Na");
@@ -82,6 +85,8 @@ public class InitialChangeLog {
 
         User user1 = new User();
         user1.setId(new BigInteger("2"));
+        user1.setFirstName("Sergiy");
+        user1.setLastName("Bobrov");
         user1.setEmail("user1@user.com");
         user1.setLogin("user1");
         user1.setPassword("$2a$10$hH5QaV01tEq90KqsQP.00exZbEFFcXmkI7CmEuTIjkGfUL4JOI3Na");

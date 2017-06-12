@@ -1,5 +1,7 @@
 package ua.yware.slace.config.jwt;
 
+import ua.yware.slace.config.jwt.exception.InvalidTokenException;
+
 import org.springframework.security.core.Authentication;
 
 public interface TokenService {

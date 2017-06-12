@@ -28,6 +28,8 @@ public class ChatMessageDto {
 
     private String senderId;
 
+    private String senderName;
+
     private String message;
 
     @JsonFormat(pattern = "yyyy-mm-dd hh:mm:ss")

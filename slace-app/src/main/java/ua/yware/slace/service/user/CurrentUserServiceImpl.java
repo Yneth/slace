@@ -16,11 +16,13 @@
 
 package ua.yware.slace.service.user;
 
+import java.security.Principal;
+
 import lombok.RequiredArgsConstructor;
-import ua.yware.slace.config.jwt.SecuredUser;
 import ua.yware.slace.dao.UserRepository;
 import ua.yware.slace.model.User;
 
+import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -34,8 +36,17 @@ public class CurrentUserServiceImpl implements CurrentUserService {
     @Override
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SecuredUser principal = (SecuredUser) authentication.getPrincipal();
-        return userRepository.findByLogin(principal.getLogin());
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof Principal) {
+            return getCurrentUser((Principal) principal);
+        }
+        return userRepository.findByLogin(((AuthenticatedPrincipal) principal).getName());
+    }
+
+    @Override
+    public User getCurrentUser(Principal user) {
+        // TODO: throw exception if principal null
+        return userRepository.findByLogin(user.getName());
     }
 
 }

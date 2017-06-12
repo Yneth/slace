@@ -16,23 +16,20 @@
 
 package ua.yware.slace.config;
 
-import java.nio.ByteBuffer;
-
 import lombok.extern.slf4j.Slf4j;
 import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.StopWatch;
+import org.springframework.web.bind.annotation.RestController;
 
 @Configuration
 @EnableSwagger2
-@Profile({"swagger"})
 @Slf4j
 public class SwaggerConfiguration {
 
@@ -42,13 +39,18 @@ public class SwaggerConfiguration {
 
         StopWatch watch = new StopWatch();
         watch.start();
-        Docket docket = (new Docket(DocumentationType.SWAGGER_2))
-                .forCodeGeneration(true)
-                .directModelSubstitute(ByteBuffer.class, String.class)
-                .genericModelSubstitutes(new Class[]{ResponseEntity.class})
+//        Docket docket = (new Docket(DocumentationType.SWAGGER_2))
+//                .forCodeGeneration(true)
+//                .directModelSubstitute(ByteBuffer.class, String.class)
+//                .genericModelSubstitutes(new Class[]{ResponseEntity.class})
+//                .select()
+//                .paths(PathSelectors.any())
+//                .build();
+        Docket docket = new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .paths(PathSelectors.any())
-                .build();
+                .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
+                .paths(PathSelectors.any()).build()
+                .pathMapping("/").useDefaultResponseMessages(false);
         watch.stop();
 
         log.debug("Started Swagger in {} ms", watch.getTotalTimeMillis());

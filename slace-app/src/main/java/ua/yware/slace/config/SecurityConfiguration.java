@@ -18,7 +18,7 @@ package ua.yware.slace.config;
 
 import lombok.RequiredArgsConstructor;
 import ua.yware.slace.config.jwt.JwtAuthenticationFilter;
-import ua.yware.slace.config.jwt.JwtTokenService;
+import ua.yware.slace.config.jwt.exception.JwtTokenService;
 import ua.yware.slace.config.jwt.TokenService;
 
 import org.springframework.context.annotation.Bean;

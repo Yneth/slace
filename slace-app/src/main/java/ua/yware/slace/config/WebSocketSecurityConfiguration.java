@@ -46,9 +46,4 @@ public class WebSocketSecurityConfiguration extends AbstractSecurityWebSocketMes
         return true;
     }
 
-//    @Bean
-//    public static JwtWebSocketChannelInterceptor interceptor(TokenService tokenService) {
-//        return new JwtWebSocketChannelInterceptor(tokenService);
-//    }
-
 }

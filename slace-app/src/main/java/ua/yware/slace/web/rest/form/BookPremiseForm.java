@@ -18,18 +18,19 @@ package ua.yware.slace.web.rest.form;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public class BookPremiseForm {
 
     private BigInteger premiseId;
 
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm")
     private LocalDateTime from;
 
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm")
     private LocalDateTime to;
 
 }

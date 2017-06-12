@@ -19,14 +19,13 @@ package ua.yware.slace.dao;
 import java.math.BigInteger;
 import java.util.List;
 
+import ua.yware.slace.dao.ops.PremiseOperations;
 import ua.yware.slace.model.Premise;
 import ua.yware.slace.model.User;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface PremiseRepository extends CrudRepository<Premise, BigInteger> {
-
-    List<Premise> findAllByReservationsUser(User user);
+public interface PremiseRepository extends PremiseOperations, CrudRepository<Premise, BigInteger> {
 
     List<Premise> findAllByOwner(User owner);
 

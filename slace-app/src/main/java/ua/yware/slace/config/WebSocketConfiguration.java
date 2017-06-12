@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.websocket.api.WebSocketBehavior;
 import org.eclipse.jetty.websocket.api.WebSocketPolicy;
-import ua.yware.slace.config.jwt.JwtHandshakeInterceptor;
 import ua.yware.slace.config.jwt.TokenService;
 
 import org.springframework.context.annotation.Configuration;
@@ -43,7 +42,7 @@ public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfig
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/app")
-                .setHandshakeHandler(handshakeHandler(tokenService))
+                .setHandshakeHandler(handshakeHandler())
                 .setAllowedOrigins("*")
                 .withSockJS();
     }
@@ -54,13 +53,12 @@ public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfig
         registry.setApplicationDestinationPrefixes("/app");
     }
 
-    private DefaultHandshakeHandler handshakeHandler(TokenService tokenService) {
+    private DefaultHandshakeHandler handshakeHandler() {
         WebSocketPolicy webSocketPolicy = new WebSocketPolicy(WebSocketBehavior.SERVER);
         webSocketPolicy.setIdleTimeout(600000);
         webSocketPolicy.setInputBufferSize(8192);
 
-        return new JwtHandshakeInterceptor(
-                new JettyRequestUpgradeStrategy(webSocketPolicy), tokenService);
+        return new DefaultHandshakeHandler(new JettyRequestUpgradeStrategy(webSocketPolicy));
     }
 
 }
