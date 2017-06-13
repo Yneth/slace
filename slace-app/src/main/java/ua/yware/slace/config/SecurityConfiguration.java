@@ -18,8 +18,8 @@ package ua.yware.slace.config;
 
 import lombok.RequiredArgsConstructor;
 import ua.yware.slace.config.jwt.JwtAuthenticationFilter;
-import ua.yware.slace.config.jwt.exception.JwtTokenService;
 import ua.yware.slace.config.jwt.TokenService;
+import ua.yware.slace.config.jwt.exception.JwtTokenService;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,12 +39,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().anyRequest().permitAll()
+        http.authorizeRequests().anyRequest().permitAll();
 //        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-                .and().csrf().disable()
-                .headers().frameOptions().disable()
-//                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().addFilterBefore(authFilter(tokenService()), UsernamePasswordAuthenticationFilter.class);
+        http.csrf().disable();
+        http.headers().frameOptions().disable();
+//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.addFilterBefore(authFilter(tokenService()), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
