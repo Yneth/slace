@@ -2,7 +2,7 @@ spring:
   application:
     name: slace
   profiles:
-    active: local
+    active: dev
   mvc:
     static-path-pattern: /**
 api.prefix: /api
@@ -11,7 +11,7 @@ jwt:
   rememberMeExpiration: 44640000
 ---
 spring:
-  profiles: production
+  profiles: prod
 
 spring:
   data:
@@ -24,7 +24,7 @@ storage:
   location: /tmp
 ---
 spring:
-  profiles: local
+  profiles: dev
 
 spring:
   data:

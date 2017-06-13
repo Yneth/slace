@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -Dspring.profiles.active=production -Dserver.port=$PORT -jar slace-app/target/*.jar
+web: java $JAVA_OPTS -Dspring.profiles.active=prod -Dserver.port=$PORT -jar slace-app/target/*.jar
