@@ -16,4 +16,4 @@ sms:
     account:
       sid: ${TWILIO_SID}
       token: ${TWILIO_TOKEN}
-    number: ${TWILIO_NUMBER
+    number: ${TWILIO_NUMBER}
