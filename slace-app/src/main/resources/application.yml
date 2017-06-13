@@ -5,7 +5,9 @@ spring:
     active: dev
   mvc:
     static-path-pattern: /**
+
 api.prefix: /api
+
 jwt:
   expiration: 10080000
   rememberMeExpiration: 44640000
@@ -22,6 +24,13 @@ jwt.secret: ${TOKEN_SECRET}
 
 storage:
   location: /tmp
+
+sms:
+  twilio:
+    account:
+      sid: ${TWILIO_SID}
+      token: ${TWILIO_TOKEN}
+    number: ${TWILIO_NUMBER}
 ---
 spring:
   profiles: dev
