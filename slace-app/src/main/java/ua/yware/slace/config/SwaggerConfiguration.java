@@ -39,13 +39,7 @@ public class SwaggerConfiguration {
 
         StopWatch watch = new StopWatch();
         watch.start();
-//        Docket docket = (new Docket(DocumentationType.SWAGGER_2))
-//                .forCodeGeneration(true)
-//                .directModelSubstitute(ByteBuffer.class, String.class)
-//                .genericModelSubstitutes(new Class[]{ResponseEntity.class})
-//                .select()
-//                .paths(PathSelectors.any())
-//                .build();
+
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
