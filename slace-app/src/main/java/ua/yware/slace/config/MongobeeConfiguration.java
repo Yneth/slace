@@ -23,9 +23,8 @@ import javax.annotation.PostConstruct;
 import com.github.mongobee.Mongobee;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -36,7 +35,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 @Configuration
 public class MongobeeConfiguration {
 
-    @AutoConfigureAfter({EmbeddedMongoAutoConfiguration.class, MongoAutoConfiguration.class})
     @Configuration
     public static class MongobeeConf {
 
@@ -53,6 +51,7 @@ public class MongobeeConfiguration {
     }
 
     @Profile("embedded")
+    @AutoConfigureBefore(MongobeeConf.class)
     @ConditionalOnClass(EmbeddedMongoAutoConfiguration.class)
     @Configuration
     @RequiredArgsConstructor
