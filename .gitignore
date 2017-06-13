@@ -4,6 +4,8 @@
 /slace-ui/src/node
 /slace-ui/dist
 
+package-lock.json
+
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
