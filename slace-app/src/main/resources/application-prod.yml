@@ -1,0 +1,19 @@
+spring:
+  profiles: prod
+
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+
+jwt.secret: ${TOKEN_SECRET}
+
+storage:
+  location: /tmp
+
+sms:
+  twilio:
+    account:
+      sid: ${TWILIO_SID}
+      token: ${TWILIO_TOKEN}
+    number: ${TWILIO_NUMBER
