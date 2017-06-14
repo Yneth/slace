@@ -37,9 +37,9 @@ public class ChatMessage {
     @Id
     private BigInteger id;
 
-    private BigInteger senderId;
+    private User sender;
 
-    private BigInteger receiverId;
+    private User receiver;
 
     private String message;
 

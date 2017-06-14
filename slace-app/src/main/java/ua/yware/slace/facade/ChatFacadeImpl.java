@@ -27,14 +27,12 @@ import ua.yware.slace.dao.UserRepository;
 import ua.yware.slace.model.ChatMessage;
 import ua.yware.slace.model.User;
 import ua.yware.slace.service.user.CurrentUserService;
-import ua.yware.slace.service.user.UserService;
 
 @Component
 @RequiredArgsConstructor
 public class ChatFacadeImpl implements ChatFacade {
 
     private final CurrentUserService currentUserService;
-    private final UserService userService;
     private final UserRepository userRepository;
     private final ChatMessageRepository chatMessageRepository;
 
@@ -43,7 +41,7 @@ public class ChatFacadeImpl implements ChatFacade {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("No such user exception."));
         User currentUser = currentUserService.getCurrentUser();
-        return chatMessageRepository.findAllByFromIdAndToId(currentUser.getId(), user.getId());
+        return chatMessageRepository.findAllBySenderAndReceiver(currentUser, user);
     }
 
 }

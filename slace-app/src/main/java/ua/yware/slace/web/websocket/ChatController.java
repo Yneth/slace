@@ -26,12 +26,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import ua.yware.slace.dao.ChatMessageRepository;
 import ua.yware.slace.dao.ReservationRepository;
 import ua.yware.slace.facade.ChatFacade;
-import ua.yware.slace.model.ChatMessage;
 import ua.yware.slace.model.User;
 import ua.yware.slace.service.dto.ChatMessageDto;
 import ua.yware.slace.service.user.CurrentUserService;
@@ -51,8 +51,18 @@ public class ChatController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/chat/{userId}")
-    public List<ChatMessage> getChatHistory(@PathVariable("userId") BigInteger userId) {
-        return chatFacade.loadHistory(userId);
+    public List<ChatMessageDto> getChatHistory(@PathVariable("userId") BigInteger userId) {
+        return chatFacade.loadHistory(userId).stream()
+                .map(msg -> {
+                    ChatMessageDto dto = new ChatMessageDto();
+                    dto.setCreationDate(msg.getSentDate());
+                    dto.setMessage(msg.getMessage());
+
+                    User sender = msg.getSender();
+                    dto.setSenderName(sender.getFullName());
+                    dto.setSenderId(sender.getId());
+                    return dto;
+                }).collect(Collectors.toList());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -68,7 +78,7 @@ public class ChatController {
 
         ChatMessageDto chatMessageDto = new ChatMessageDto();
 
-        chatMessageDto.setSenderId(currentUser.getId().toString());
+        chatMessageDto.setSenderId(currentUser.getId());
         chatMessageDto.setSenderName(currentUser.getFullName());
         chatMessageDto.setCreationDate(LocalDateTime.now());
         chatMessageDto.setMessage(chatMessageForm.getMessage());

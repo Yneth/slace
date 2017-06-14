@@ -16,9 +16,11 @@
 
 package ua.yware.slace.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,7 +28,7 @@ import lombok.Setter;
 @Setter
 public class ChatMessageDto {
 
-    private String senderId;
+    private BigInteger senderId;
 
     private String senderName;
 

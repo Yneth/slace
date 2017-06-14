@@ -16,23 +16,6 @@
 
 package ua.yware.slace.web.rest;
 
-import java.math.BigInteger;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import lombok.RequiredArgsConstructor;
-import ua.yware.slace.dao.ReservationRepository;
-import ua.yware.slace.model.Premise;
-import ua.yware.slace.model.Reservation;
-import ua.yware.slace.model.User;
-import ua.yware.slace.model.enums.ReservationStatus;
-import ua.yware.slace.service.premise.PremiseService;
-import ua.yware.slace.service.dto.ReservationDto;
-import ua.yware.slace.service.user.CurrentUserService;
-import ua.yware.slace.web.exception.ResourceNotFoundException;
-import ua.yware.slace.web.rest.form.BookPremiseForm;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,6 +27,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import lombok.RequiredArgsConstructor;
+import ua.yware.slace.dao.ReservationRepository;
+import ua.yware.slace.model.Premise;
+import ua.yware.slace.model.Reservation;
+import ua.yware.slace.model.User;
+import ua.yware.slace.model.enums.ReservationStatus;
+import ua.yware.slace.service.dto.ReservationDto;
+import ua.yware.slace.service.premise.PremiseService;
+import ua.yware.slace.service.user.CurrentUserService;
+import ua.yware.slace.web.exception.ResourceNotFoundException;
+import ua.yware.slace.web.rest.form.BookPremiseForm;
+
 @RestController
 @RequestMapping("${api.prefix}/premises")
 @RequiredArgsConstructor
@@ -54,7 +54,7 @@ public class ReservationController {
     private final ReservationRepository reservationRepository;
 
     @GetMapping("/{id}/reservations/nearest")
-    public Iterable<ReservationDto> getNearestReservations(@PathVariable("id") BigInteger id) {
+    public List<ReservationDto> getNearestReservations(@PathVariable("id") BigInteger id) {
         LocalDateTime now = LocalDateTime.now();
         return reservationRepository.findAllByPremiseAndFromAfterAndToBefore(
                 premiseService.getById(id), now.minusMonths(1), now.plusMonths(1))
@@ -64,7 +64,7 @@ public class ReservationController {
     }
 
     @GetMapping("/{id}/reservations")
-    public Iterable<ReservationDto> getReservations(@PathVariable("id") BigInteger id) {
+    public List<ReservationDto> getReservations(@PathVariable("id") BigInteger id) {
         return premiseService.getById(id).getReservations().stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());

@@ -35,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -73,21 +74,21 @@ public class PremiseController {
     private final CommentRepository commentRepository;
 
     @GetMapping("/search")
-    public Iterable<PremiseDto> searchPremises(PremiseSearchForm premiseSearchFrom) {
+    public List<PremiseDto> searchPremises(PremiseSearchForm premiseSearchFrom) {
         return premiseSearchService.findAll(premiseSearchFrom).stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/categories")
-    public Iterable<CategoryDto> getPremiseCategories() {
+    public List<CategoryDto> getPremiseCategories() {
         return StreamSupport.stream(categoryRepository.findAll().spliterator(), false)
                 .map(CategoryDto::new)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/popular")
-    public Iterable<PremiseDto> getPopularPremises() {
+    public List<PremiseDto> getPopularPremises() {
         return StreamSupport.stream(premiseRepository.findAll().spliterator(), false)
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
@@ -102,7 +103,7 @@ public class PremiseController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/user")
-    public Iterable<PremiseDto> getUserPremises() {
+    public List<PremiseDto> getUserPremises() {
         return premiseRepository.findAllByOwner(currentUserService.getCurrentUser())
                 .stream()
                 .map(this::mapToDto)
@@ -111,7 +112,7 @@ public class PremiseController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/reserved")
-    public Iterable<PremiseDto> listReserved() {
+    public List<PremiseDto> listReserved() {
         return premiseRepository.findPremisesReservedBy(currentUserService.getCurrentUser())
                 .stream()
                 .map(this::mapToDto)
