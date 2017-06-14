@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.Getter;
-import ua.yware.slace.model.Category;
 
 @Getter
 public class PremiseForm {
@@ -34,7 +33,7 @@ public class PremiseForm {
 
     private String address;
 
-    private List<Category> categories;
+    private List<String> categories;
 
     private BigDecimal priceRate;
 

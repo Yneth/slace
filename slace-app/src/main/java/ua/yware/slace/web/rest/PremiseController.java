@@ -16,31 +16,7 @@
 
 package ua.yware.slace.web.rest;
 
-import java.math.BigInteger;
-import java.time.LocalDateTime;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-
-import lombok.RequiredArgsConstructor;
-import ua.yware.slace.dao.CategoryRepository;
-import ua.yware.slace.dao.CommentRepository;
-import ua.yware.slace.dao.PremiseRepository;
-import ua.yware.slace.model.Comment;
-import ua.yware.slace.model.Premise;
-import ua.yware.slace.model.User;
-import ua.yware.slace.service.premise.PremiseSearchService;
-import ua.yware.slace.service.premise.PremiseService;
-import ua.yware.slace.service.dto.CategoryDto;
-import ua.yware.slace.service.dto.CommentDto;
-import ua.yware.slace.service.dto.PremiseDto;
-import ua.yware.slace.service.storage.StorageService;
-import ua.yware.slace.service.user.CurrentUserService;
-import ua.yware.slace.web.exception.ResourceNotFoundException;
-import ua.yware.slace.web.rest.form.CommentForm;
-import ua.yware.slace.web.rest.form.PremiseForm;
-import ua.yware.slace.web.rest.form.PremiseSearchForm;
-import ua.yware.slace.web.rest.form.UpdatePremiseForm;
+import com.google.common.collect.Lists;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,6 +32,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
+import lombok.RequiredArgsConstructor;
+import ua.yware.slace.dao.CategoryRepository;
+import ua.yware.slace.dao.CommentRepository;
+import ua.yware.slace.dao.PremiseRepository;
+import ua.yware.slace.model.Comment;
+import ua.yware.slace.model.Premise;
+import ua.yware.slace.model.User;
+import ua.yware.slace.service.dto.CategoryDto;
+import ua.yware.slace.service.dto.CommentDto;
+import ua.yware.slace.service.dto.PremiseDto;
+import ua.yware.slace.service.premise.PremiseSearchService;
+import ua.yware.slace.service.premise.PremiseService;
+import ua.yware.slace.service.storage.StorageService;
+import ua.yware.slace.service.user.CurrentUserService;
+import ua.yware.slace.web.exception.ResourceNotFoundException;
+import ua.yware.slace.web.rest.form.CommentForm;
+import ua.yware.slace.web.rest.form.PremiseForm;
+import ua.yware.slace.web.rest.form.PremiseSearchForm;
+import ua.yware.slace.web.rest.form.UpdatePremiseForm;
 
 @RestController
 @RequestMapping("${api.prefix}/premises")
@@ -235,7 +237,8 @@ public class PremiseController {
         premise.setEquipment(premiseForm.getEquipment());
         premise.setArea(premiseForm.getArea());
         premise.setSpace(premiseForm.getSpace());
-        premise.setCategories(premiseForm.getCategories());
+        premise.setCategories(
+                Lists.newArrayList(categoryRepository.findAllById(premiseForm.getCategories())));
         premise.setPriceRate(premiseForm.getPriceRate());
     }
 
