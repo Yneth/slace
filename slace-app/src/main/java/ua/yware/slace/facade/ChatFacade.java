@@ -16,12 +16,13 @@
 
 package ua.yware.slace.facade;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import ua.yware.slace.model.ChatMessage;
 
 public interface ChatFacade {
 
-    List<ChatMessage> loadHistory(Long id);
+    List<ChatMessage> loadHistory(BigInteger id);
 
 }

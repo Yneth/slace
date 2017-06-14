@@ -16,6 +16,14 @@
 
 package ua.yware.slace.web.websocket;
 
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,13 +38,6 @@ import ua.yware.slace.service.user.CurrentUserService;
 import ua.yware.slace.service.user.UserService;
 import ua.yware.slace.web.rest.form.ChatMessageForm;
 
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-
 @RestController("${api.prefix}")
 @RequiredArgsConstructor
 public class ChatController {
@@ -50,7 +51,7 @@ public class ChatController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/chat/{userId}")
-    public List<ChatMessage> getChatHistory(@PathVariable("userId") Long userId) {
+    public List<ChatMessage> getChatHistory(@PathVariable("userId") BigInteger userId) {
         return chatFacade.loadHistory(userId);
     }
 

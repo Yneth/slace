@@ -16,6 +16,8 @@
 
 package ua.yware.slace.facade;
 
+import org.springframework.stereotype.Component;
+
 import java.math.BigInteger;
 import java.util.List;
 
@@ -27,8 +29,6 @@ import ua.yware.slace.model.User;
 import ua.yware.slace.service.user.CurrentUserService;
 import ua.yware.slace.service.user.UserService;
 
-import org.springframework.stereotype.Component;
-
 @Component
 @RequiredArgsConstructor
 public class ChatFacadeImpl implements ChatFacade {
@@ -39,8 +39,8 @@ public class ChatFacadeImpl implements ChatFacade {
     private final ChatMessageRepository chatMessageRepository;
 
     @Override
-    public List<ChatMessage> loadHistory(Long userId) {
-        User user = userRepository.findById(BigInteger.valueOf(userId))
+    public List<ChatMessage> loadHistory(BigInteger userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("No such user exception."));
         User currentUser = currentUserService.getCurrentUser();
         return chatMessageRepository.findAllByFromIdAndToId(currentUser.getId(), user.getId());
