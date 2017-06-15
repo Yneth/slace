@@ -18,13 +18,17 @@ package ua.yware.slace.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @EnableSpringDataWebSupport
 @Configuration
@@ -36,8 +40,23 @@ public class WebConfiguration {
     }
 
     @Bean
+    public ViewResolver viewResolver() {
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setSuffix(".html");
+        viewResolver.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return viewResolver;
+    }
+
+    @Bean
     public WebMvcConfigurer webMvcConfigurer() {
         return new WebMvcConfigurer() {
+
+            @Override
+            public void addViewControllers(ViewControllerRegistry registry) {
+                registry.addViewController("/").setViewName("index");
+                registry.addViewController("/admin").setViewName("admin/index");
+            }
+
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
@@ -49,6 +68,7 @@ public class WebConfiguration {
             public void addInterceptors(InterceptorRegistry registry) {
                 registry.addInterceptor(new LocaleChangeInterceptor());
             }
+
         };
     }
 
