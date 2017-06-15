@@ -57,7 +57,8 @@ public class MongobeeConfiguration {
     @RequiredArgsConstructor
     public static class EmbeddedMongoPropertiesPostProcessConfiguration {
 
-        private static final Pattern URL_PATTERN = Pattern.compile("^mongodb://(?<host>\\w+):(?<port>\\d+)/(?<uri>\\w+)/?$");
+        private static final Pattern URL_PATTERN = Pattern.compile(
+                "^mongodb://(?<host>\\w+):(?<port>\\d+)/(?<uri>\\w+)/?$");
 
         private final MongoProperties mongoProperties;
 

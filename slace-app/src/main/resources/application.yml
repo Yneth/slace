@@ -2,15 +2,11 @@ spring:
   application:
     name: slace
   profiles:
-    active: dev, embedded
+    active: dev
   mvc:
     static-path-pattern: /**
   session:
     store-type: redis
-
-server:
-  error:
-    path: /500
 
 server:
   error:
