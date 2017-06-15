@@ -5,6 +5,8 @@ spring:
     active: dev
   mvc:
     static-path-pattern: /**
+  session:
+    store-type: redis
 
 api.prefix: /api
 
