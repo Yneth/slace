@@ -16,11 +16,6 @@
 
 package ua.yware.slace.config.jwt;
 
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import ua.yware.slace.config.jwt.exception.InvalidTokenException;
-
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -29,10 +24,21 @@ import org.springframework.messaging.support.ChannelInterceptorAdapter;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Set;
+
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import ua.yware.slace.config.jwt.exception.InvalidTokenException;
+
 @Slf4j
 @RequiredArgsConstructor
 public class JwtWebSocketChannelInterceptor extends ChannelInterceptorAdapter {
-//    private static final MessageMatcher<StompCommand> MATCHER =
+
+    private static final Set<StompCommand> ALLOWED_COMMANDS = Collections.unmodifiableSet(
+            EnumSet.of(StompCommand.CONNECT, StompCommand.MESSAGE, StompCommand.MESSAGE));
 
     private final TokenService jwtTokenService;
 
@@ -43,7 +49,7 @@ public class JwtWebSocketChannelInterceptor extends ChannelInterceptorAdapter {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor =
                 MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-        if (!StompCommand.CONNECT.equals(accessor.getCommand())) {
+        if (!ALLOWED_COMMANDS.contains(accessor.getCommand())) {
             return message;
         }
         String token = accessor.getFirstNativeHeader(authorizationHeader);
