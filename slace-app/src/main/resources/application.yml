@@ -12,6 +12,10 @@ server:
   error:
     path: /500
 
+server:
+  error:
+    path: /500
+
 api.prefix: /api
 
 jwt:
