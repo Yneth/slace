@@ -1,5 +1,7 @@
 spring:
   profiles: prod
+  redis:
+    url: ${REDIS_URL}
 
 spring:
   data:
@@ -9,7 +11,7 @@ spring:
 jwt.secret: ${TOKEN_SECRET}
 
 storage:
-  location: /tmp
+  location: ${STORAGE_LOCATION}
 
 sms:
   twilio:
