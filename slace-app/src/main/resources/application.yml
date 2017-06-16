@@ -2,7 +2,7 @@ spring:
   application:
     name: slace
   profiles:
-    active: dev, embedded
+    active: dev
   mvc:
     static-path-pattern: /**
   session:

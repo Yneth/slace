@@ -2,8 +2,6 @@ spring:
   profiles: dev
   redis:
     url: redis://localhost:6379
-
-spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/slace
