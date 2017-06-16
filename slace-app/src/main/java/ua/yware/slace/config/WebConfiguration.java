@@ -54,6 +54,7 @@ public class WebConfiguration {
             @Override
             public void addViewControllers(ViewControllerRegistry registry) {
                 registry.addViewController("/").setViewName("index");
+                registry.addViewController("/test").setViewName("test");
                 registry.addViewController("/admin").setViewName("admin/index");
             }
 
