@@ -1,7 +1,5 @@
 spring:
   profiles: prod
-  redis:
-    url: ${REDIS_URL}
   data:
     mongodb:
       uri: ${MONGODB_URI}
