@@ -16,67 +16,24 @@
 
 package ua.yware.slace.config;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.annotation.PostConstruct;
-
 import com.github.mongobee.Mongobee;
-import lombok.RequiredArgsConstructor;
 
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
-import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 @Configuration
 public class MongobeeConfiguration {
 
-    @Configuration
-    public static class MongobeeConf {
+    @Bean
+    public Mongobee mongobee(MongoTemplate mongoTemplate, MongoProperties mongoProperties) {
+        Mongobee runner = new Mongobee(mongoProperties.determineUri());
 
-        @Bean
-        public Mongobee mongobee(MongoTemplate mongoTemplate, MongoProperties mongoProperties) {
-            Mongobee runner = new Mongobee(mongoProperties.determineUri());
+        runner.setChangeLogsScanPackage("ua.yware.slace.config.changeset");
+        runner.setMongoTemplate(mongoTemplate);
 
-            runner.setChangeLogsScanPackage("ua.yware.slace.config.changeset");
-            runner.setMongoTemplate(mongoTemplate);
-
-            return runner;
-        }
-
-    }
-
-    @Profile("embedded")
-    @AutoConfigureBefore(MongobeeConf.class)
-    @ConditionalOnClass(EmbeddedMongoAutoConfiguration.class)
-    @Configuration
-    @RequiredArgsConstructor
-    public static class EmbeddedMongoPropertiesPostProcessConfiguration {
-
-        private static final Pattern URL_PATTERN = Pattern.compile(
-                "^mongodb://(?<host>\\w+):(?<port>\\d+)/(?<uri>\\w+)/?$");
-
-        private final MongoProperties mongoProperties;
-
-        @PostConstruct
-        public void init() {
-            String uri = mongoProperties.getUri();
-            if (uri == null) {
-                return;
-            }
-            Matcher urlMatcher = URL_PATTERN.matcher(uri);
-            if (urlMatcher.find()) {
-                mongoProperties.setHost(urlMatcher.group("host"));
-                mongoProperties.setPort(Integer.parseInt(urlMatcher.group("port")));
-                mongoProperties.setDatabase(urlMatcher.group("uri"));
-                mongoProperties.setUri(null);
-            }
-        }
-
+        return runner;
     }
 
 }
