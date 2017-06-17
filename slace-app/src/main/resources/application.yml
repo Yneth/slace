@@ -1,14 +1,12 @@
 spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
   application:
     name: slace
   profiles:
     active: dev
   mvc:
     static-path-pattern: /**
-
-server:
-  error:
-    path: /500
 
 api.prefix: /api
 
